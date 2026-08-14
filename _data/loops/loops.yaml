@@ -1,0 +1,168 @@
+loops:
+  - name: "Portland/South Portland"
+    slug: portland
+    blurb: "Cross the bridge between South Portland's stands and the peninsula's classics."
+    locations:
+      - id: reds_dairy_freeze
+        name: "Red's Dairy Freeze"
+        address: "167 Cottage Rd, South Portland, ME 04106"
+        hours:
+          Monday: 3-7PM
+          Tuesday: 3-7PM
+          Wednesday: 3-7PM
+          Thursday: 3-7PM
+          Friday: 3-8PM
+          Saturday: 12-8PM
+          Sunday: 12-8PM
+        seasonal: true
+        coordinates:
+          lat: 43.6347911
+          lon: -70.2462231
+
+      - id: twin_swirls
+        name: "Twin Swirls"
+        address: "741 Broadway, South Portland, ME 04106"
+        hours:
+          Monday: 12PM-9PM
+          Tuesday: 12PM-9PM
+          Wednesday: 12PM-9PM
+          Thursday: 12PM-9PM
+          Friday: 12PM-9PM
+          Saturday: 12PM-9PM
+          Sunday: 12PM-9PM
+        seasonal: true
+        coordinates:
+          lat: 43.623944
+          lon: -70.272019
+
+      - id: willard_scoops
+        name: "Willard Scoops"
+        address: "429 Preble St, South Portland, ME 04106"
+        hours:
+          Monday: 1PM-9:30PM
+          Tuesday: 1PM-9:30PM
+          Wednesday: 1PM-9:30PM
+          Thursday: 1PM-9:30PM
+          Friday: 1PM-9:30PM
+          Saturday: 1PM-9:30PM
+          Sunday: 1PM-9:30PM
+        seasonal: true
+        coordinates:
+          lat: 43.638897
+          lon: -70.230749
+
+      - id: mdi_exchange_st
+        name: "Mount Desert Island Ice Cream"
+        address: "51 Exchange St, Portland, ME 04101"
+        hours:
+          Monday: 12PM-10PM
+          Tuesday: 12PM-10PM
+          Wednesday: 12PM-10PM
+          Thursday: 12PM-10PM
+          Friday: 12PM-10:30PM
+          Saturday: 12PM-10:30PM
+          Sunday: 12PM-10:30PM
+        seasonal: false
+        coordinates:
+          lat: 43.6574584
+          lon: -70.2542364
+
+      - id: beals_veranda
+        name: "Beal's Ice Cream (Veranda St)"
+        address: "18 Veranda St, Portland, ME 04103"
+        hours:
+          Monday: 3-7PM
+          Tuesday: 3-7PM
+          Wednesday: 3-7PM
+          Thursday: 3-7PM
+          Friday: 3-8PM
+          Saturday: 12-8PM
+          Sunday: 12-8PM
+        seasonal: true
+        coordinates:
+          lat: 43.6809578
+          lon: -70.2571544
+
+  - name: "Saco/Old Orchard Beach"
+    slug: saco-oob
+    blurb: "A coastal run from Saco's Main Street down to the Old Orchard Beach pier."
+    locations:
+      - id: saco_scoop
+        name: "The Saco Scoop"
+        address: "209 Main St #101, Saco, ME 04072"
+        hours:
+          Monday: 12PM-9:30PM
+          Tuesday: 12PM-9:30PM
+          Wednesday: 12PM-9:30PM
+          Thursday: 12PM-9:30PM
+          Friday: 12PM-9:30PM
+          Saturday: 12PM-9:30PM
+          Sunday: 12PM-9:30PM
+        seasonal: true
+        coordinates:
+          lat: 43.4971636
+          lon: -70.4461633
+
+      - id: garsides
+        name: "Garside's Ice Cream"
+        address: "320 Ferry Rd, Saco, ME 04072"
+        hours:
+          Monday: 12PM-9PM
+          Tuesday: 12PM-9PM
+          Wednesday: 12PM-9PM
+          Thursday: 12PM-9PM
+          Friday: 12PM-10PM
+          Saturday: 12PM-10PM
+          Sunday: 12PM-9PM
+        seasonal: true
+        coordinates:
+          lat: 43.4822972
+          lon: -70.406474
+
+      - id: dairy_queen_saco
+        name: "Dairy Queen (Saco)"
+        address: "517 Main St, Saco, ME 04072"
+        hours:
+          Monday: 11AM-9PM
+          Tuesday: 11AM-9PM
+          Wednesday: 11AM-9PM
+          Thursday: 11AM-9PM
+          Friday: 11AM-9PM
+          Saturday: 11AM-9PM
+          Sunday: 11-9PM
+        seasonal: true
+        coordinates:
+          lat: 43.5095774
+          lon: -70.4342091
+
+      - id: fielders_choice_oob
+        name: "Fielder's Choice"
+        address: "156 Saco Ave, Old Orchard Beach, ME 04064"
+        hours:
+          Monday: 11AM-10PM
+          Tuesday: 11AM-10PM
+          Wednesday: 11AM-10PM
+          Thursday: 11AM-10PM
+          Friday: 11AM-10PM
+          Saturday: 11AM-10PM
+          Sunday: 11AM-10PM
+        seasonal: true
+        coordinates:
+          lat: 43.5120875
+          lon: -70.3939692
+
+      - id: soda_fountain_ocean_park
+        name: "Ocean Park Soda Fountain"
+        address: "12 Temple Ave, Ocean Park, ME 04063"
+        hours:
+          Monday: 7AM-10PM
+          Tuesday: 7AM-10PM 
+          Wednesday: 7AM-10PM
+          Thursday: 7AM-10PM
+          Friday: 7AM-10PM
+          Saturday: 7AM-10PM
+          Sunday: 7AM-10PM
+        seasonal: true
+        coordinates:
+          lat: 43.5005432
+          lon: -70.3852727

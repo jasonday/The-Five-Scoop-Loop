@@ -1,0 +1,31 @@
+title: The Five Scoop Loop
+tagline: Run a loop, visit five ice cream shops, earn your scoops.
+description: >-
+  A regional ice cream run challenge. Run a single continuous loop that visits
+  five ice cream shops across Maine, eat at each one, and return to your start.
+# Set this to your published URL. For a project site it is
+# https://<user>.github.io/<repo>. Leave baseurl empty for a user/org site.
+url: ""
+baseurl: "/The-Five-Scoop-Loop"
+
+# Build settings
+markdown: kramdown
+theme: null
+plugins: []
+
+# How many entries to show before the leaderboard scrolls
+leaderboard_top: 25
+
+# Region metadata is defined per-loop in _data/loops/loops.yaml (slug/name).
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - .github/
+  - vendor/
+  - node_modules/
+  - scripts/
+
+sass:
+  style: compressed

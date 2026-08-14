@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+
+  {% if page.title %}
+    <title>{{ page.title }} · {{ site.title }}</title>
+  {% else %}
+    <title>{{ site.title }} · {{ site.tagline }}</title>
+  {% endif %}
+  <meta name="description" content="{{ page.description | default: site.description | strip_newlines }}">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍦</text></svg>">
+
+  <!-- Leaflet -->
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin="">
+
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+
+  <script>window.SITE_BASEURL = "{{ site.baseurl }}";</script>
+
+  <!-- Deferred scripts run in document order. Leaflet must be first so that L
+       is defined before Alpine initializes the map in x-init. The Alpine focus
+       plugin must load before Alpine core. -->
+  <script defer
+          src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+          crossorigin=""></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  {% include header.html %}
+
+  <main id="main" tabindex="-1">
+    {{ content }}
+  </main>
+
+  {% include footer.html %}
+</body>
+</html>

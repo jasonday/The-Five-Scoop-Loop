@@ -1,0 +1,18 @@
+# Jekyll
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+
+# Ruby
+vendor/
+Gemfile.lock
+
+# Node (submission processing pipeline)
+node_modules/
+.env
+.github/scripts/processed-manifest.json
+
+# OS
+.DS_Store
+Thumbs.db

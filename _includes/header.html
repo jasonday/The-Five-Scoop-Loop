@@ -1,0 +1,14 @@
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-brand" href="{{ '/' | relative_url }}">
+      <span class="site-brand__mark" aria-hidden="true">🍦</span>
+      <span class="site-brand__text">{{ site.title }}</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>Loops</a>
+      <a href="{{ '/#leaderboard' | relative_url }}">Leaderboard</a>
+      <a href="{{ '/rules/' | relative_url }}"{% if page.url contains 'rules' %} aria-current="page"{% endif %}>Rules</a>
+    </nav>
+  </div>
+</header>
