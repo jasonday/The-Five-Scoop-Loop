@@ -5,19 +5,15 @@
     "region": "portland",
     "date": "2026-07-19",
     "stravaUrl": "https://www.strava.com/activities/0000000001",
-    "photoUrl": "/assets/images/placeholder-scoop.svg",
-    "photoAlt": "Runner holding a cone outside Red's Dairy Freeze at the finish.",
+    "photos": [
+      { "src": "/assets/images/placeholder-scoop.svg", "alt": "Casey R. with a cone at Red's Dairy Freeze." },
+      { "src": "/assets/images/placeholder-cone.svg", "alt": "Casey R. outside Twin Swirls." },
+      { "src": "/assets/images/placeholder-sundae.svg", "alt": "Casey R. finishing at Beal's on Veranda Street." }
+    ],
     "distanceMiles": 8.4,
     "durationMinutes": 94,
     "rerouted": false,
     "funRun": false,
-    "shopsVisited": [
-      "Red's Dairy Freeze",
-      "Twin Swirls",
-      "Willard Scoops",
-      "Mount Desert Island Ice Cream",
-      "Beal's Ice Cream (Veranda St)"
-    ],
     "notes": "Perfect evening. Beat the sunset with two minutes to spare.",
     "routeGeoJSON": {
       "type": "FeatureCollection",
@@ -51,19 +47,15 @@
     "region": "portland",
     "date": "2026-07-25",
     "stravaUrl": "https://www.strava.com/activities/0000000002",
-    "photoUrl": "/assets/images/placeholder-scoop.svg",
-    "photoAlt": "Runner giving a thumbs up next to a closed shop sign.",
+    "photos": [
+      { "src": "/assets/images/placeholder-scoop.svg", "alt": "Devin M. at the start outside Red's Dairy Freeze." },
+      { "src": "/assets/images/placeholder-cone.svg", "alt": "Devin M. next to a closed-shop sign." }
+    ],
     "distanceMiles": 9.1,
     "durationMinutes": 118,
     "rerouted": true,
     "funRun": true,
     "funRunReason": "reroute",
-    "shopsVisited": [
-      "Red's Dairy Freeze",
-      "Twin Swirls",
-      "Mount Desert Island Ice Cream",
-      "Beal's Ice Cream (Veranda St)"
-    ],
     "notes": "Willard Scoops was closed for a private event, so I rerouted. Still a blast.",
     "routeGeoJSON": {
       "type": "FeatureCollection",
@@ -95,19 +87,13 @@
     "region": "saco-oob",
     "date": "2026-08-02",
     "stravaUrl": "https://www.strava.com/activities/0000000003",
-    "photoUrl": "/assets/images/placeholder-scoop.svg",
-    "photoAlt": "Runner at the Old Orchard Beach pier holding a sundae.",
+    "photos": [
+      { "src": "/assets/images/placeholder-sundae.svg", "alt": "Priya S. at the Old Orchard Beach pier with a sundae." }
+    ],
     "distanceMiles": 7.6,
     "durationMinutes": 88,
     "rerouted": false,
     "funRun": false,
-    "shopsVisited": [
-      "The Saco Scoop",
-      "Dairy Queen (Saco)",
-      "Garside's Ice Cream",
-      "Fielder's Choice",
-      "Ocean Park Soda Fountain"
-    ],
     "notes": "Ocean breeze the whole back half. Ocean Park was the sweet finish.",
     "routeGeoJSON": {
       "type": "FeatureCollection",
@@ -141,20 +127,14 @@
     "region": "saco-oob",
     "date": "2026-08-09",
     "stravaUrl": "https://www.strava.com/activities/0000000004",
-    "photoUrl": "/assets/images/placeholder-scoop.svg",
-    "photoAlt": "Runner mid-loop with a cone on Saco Main Street.",
+    "photos": [
+      { "src": "/assets/images/placeholder-cone.svg", "alt": "Marcus T. mid-loop on Saco Main Street." }
+    ],
     "distanceMiles": 7.9,
     "durationMinutes": null,
     "rerouted": false,
     "funRun": true,
     "funRunReason": "no-time",
-    "shopsVisited": [
-      "The Saco Scoop",
-      "Dairy Queen (Saco)",
-      "Garside's Ice Cream",
-      "Fielder's Choice",
-      "Ocean Park Soda Fountain"
-    ],
     "notes": "Watch exported the route without timestamps, so this one runs for fun.",
     "routeGeoJSON": {
       "type": "FeatureCollection",

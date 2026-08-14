@@ -111,6 +111,15 @@ function scoopApp() {
       return ["🥇", "🥈", "🥉"][i] || String(i + 1);
     },
 
+    // Normalized list of photos for an entry (supports the older single-photo
+    // shape too, just in case).
+    photoList: function (sub) {
+      if (!sub) return [];
+      if (Array.isArray(sub.photos)) return sub.photos.filter(function (p) { return p && p.src; });
+      if (sub.photoUrl) return [{ src: sub.photoUrl, alt: sub.photoAlt }];
+      return [];
+    },
+
     funRunPillText: function (sub) {
       if (!sub.funRun) return "Eligible";
       if (sub.funRunReason === "no-time") return "Fun run · untimed";

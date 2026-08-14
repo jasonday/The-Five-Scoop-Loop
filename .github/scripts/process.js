@@ -81,6 +81,28 @@ function driveIdFrom(value) {
   return match ? match[0] : null;
 }
 
+// All Drive file ids in a cell (a Forms multi-upload puts several links in one
+// cell). Only treat a cell as file links if it actually contains a URL, so we
+// never pull "ids" out of prose fields like alt text.
+function driveIdsFrom(value) {
+  const s = String(value || '');
+  if (!/https?:\/\/|drive\.google/i.test(s)) return [];
+  return s.match(/[-\w]{25,}/g) || [];
+}
+
+// Gather up to 10 photo file ids across any photo-ish columns, de-duplicated.
+function collectPhotoIds(row) {
+  const ids = [];
+  for (const key of Object.keys(row)) {
+    if (!/photo|image|proof|selfie|picture/i.test(key)) continue;
+    if (/alt|description|caption/i.test(key)) continue; // skip text fields
+    for (const fileId of driveIdsFrom(row[key])) {
+      if (!ids.includes(fileId)) ids.push(fileId);
+    }
+  }
+  return ids.slice(0, 10);
+}
+
 // A stable id derived from the row itself, so reprocessing the same submission
 // updates its entry in place instead of creating a duplicate. Prefers an
 // explicit id column, then the form Timestamp, then the Strava link.
@@ -93,14 +115,12 @@ function stableId(row) {
   return 'sub_' + crypto.createHash('sha1').update(String(key)).digest('hex').slice(0, 12);
 }
 
-async function processPhoto(url, id) {
-  const driveId = driveIdFrom(url);
-  if (!driveId) return '';
+async function processPhotoId(driveId, baseName) {
   const directUrl = `https://drive.google.com/uc?export=download&id=${driveId}`;
   const res = await fetch(directUrl);
   const buffer = await res.buffer();
 
-  const filename = `${id}.webp`;
+  const filename = `${baseName}.webp`;
   await sharp(buffer)
     .rotate() // honor EXIF orientation before stripping metadata
     .resize(1600, 1600, { fit: 'inside', withoutEnlargement: true })
@@ -228,11 +248,19 @@ async function run() {
     const runnerName = pick(row, ['Runner Name', 'Name']) || 'Anonymous';
     console.log(`Processing entry for ${runnerName}...`);
 
-    let photoUrl = '';
-    const photoField = pick(row, ['Photo Evidence', 'Photo', 'Photos', 'Finish Photo']);
-    if (photoField) {
-      try { photoUrl = await processPhoto(photoField, id); }
-      catch (err) { console.error('Failed to process photo:', err.message); }
+    // A submission may include several photos (one per shop, plus a selfie).
+    const photoIds = collectPhotoIds(row);
+    const photos = [];
+    for (let n = 0; n < photoIds.length; n++) {
+      try {
+        const src = await processPhotoId(photoIds[n], `${id}_${n + 1}`);
+        photos.push({
+          src,
+          alt: `${runnerName} ice cream run photo ${n + 1} of ${photoIds.length}`
+        });
+      } catch (err) {
+        console.error(`Failed to process photo ${n + 1}:`, err.message);
+      }
     }
 
     let routeGeoJSON = null;
@@ -281,18 +309,12 @@ async function run() {
       region: slugifyRegion(pick(row, ['Region', 'Loop'])),
       date: pick(row, ['Date', 'Run Date']) || new Date().toISOString().split('T')[0],
       stravaUrl: pick(row, ['Strava Activity Link', 'Strava', 'Activity Link']) || '',
-      photoUrl,
-      photoAlt: pick(row, ['Photo Alt Text', 'Photo Description']) || '',
+      photos,
       distanceMiles,
       durationMinutes,
       rerouted,
       funRun,
       funRunReason,
-      shopsVisited: (pick(row, ['Shops Visited', 'Shops']) || '')
-        .toString()
-        .split(/[;,\n]/)
-        .map((s) => s.trim())
-        .filter(Boolean),
       notes: pick(row, ['Notes', 'Comments']) || '',
       routeGeoJSON
     };
@@ -307,7 +329,7 @@ async function run() {
     }
 
     // The Drive files to trash once this entry is safely committed to GitHub.
-    const fileIds = [driveIdFrom(photoField || ''), driveIdFrom(gpxField || '')].filter(Boolean);
+    const fileIds = [...photoIds, driveIdFrom(gpxField || '')].filter(Boolean);
     manifestRows.push({ rowIndex: row.rowIndex, fileIds });
   }
 

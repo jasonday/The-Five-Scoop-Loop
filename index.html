@@ -196,16 +196,9 @@ title: null
             <div class="modal__body">
               <div class="modal__grid">
                 <div>
-                  <img
-                    class="proof-img"
-                    :src="withBase(selected.photoUrl)"
-                    :alt="selected.photoAlt || (selected.runnerName + ' photo proof for the ' + currentRegion.name + ' loop')"
-                    loading="lazy"
-                    @error="$el.style.display='none'">
                   <ul class="meta-list">
                     <li><span>Distance</span><span x-text="selected.distanceMiles ? selected.distanceMiles.toFixed(1) + ' mi' : '—'"></span></li>
                     <li><span>Time</span><span x-text="formatDuration(selected.durationMinutes)"></span></li>
-                    <li><span>Shops visited</span><span x-text="(selected.shopsVisited || []).length"></span></li>
                     <li>
                       <span>Strava</span>
                       <span>
@@ -226,6 +219,30 @@ title: null
                     <p x-text="selected.notes"></p>
                   </template>
                 </div>
+              </div>
+
+              <!-- All photos, full width, below the details -->
+              <div class="modal__more">
+                <h3 class="modal__label">Photos</h3>
+                <template x-if="photoList(selected).length">
+                  <ul class="photo-stack">
+                    <template x-for="(photo, i) in photoList(selected)" :key="i">
+                      <li>
+                        <a class="photo-stack__link" :href="withBase(photo.src)" target="_blank" rel="noopener noreferrer">
+                          <img
+                            class="photo-stack__img"
+                            :src="withBase(photo.src)"
+                            :alt="photo.alt || (selected.runnerName + ' photo ' + (i + 1))"
+                            loading="lazy"
+                            @error="$el.closest('li').remove()">
+                        </a>
+                      </li>
+                    </template>
+                  </ul>
+                </template>
+                <template x-if="!photoList(selected).length">
+                  <p class="muted">No photos provided.</p>
+                </template>
               </div>
             </div>
           </div>

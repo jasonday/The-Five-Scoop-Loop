@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Sample photo placeholder">
+  <rect width="800" height="600" fill="#efe7fb"/>
+  <g transform="translate(400 300)">
+    <circle r="120" fill="#fff3d6"/>
+    <text x="0" y="30" font-size="150" text-anchor="middle" font-family="system-ui, sans-serif">🍧</text>
+  </g>
+  <text x="400" y="500" text-anchor="middle" font-family="system-ui, sans-serif" font-size="30" fill="#7c3aed">Sample photo</text>
+</svg>

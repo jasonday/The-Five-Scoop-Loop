@@ -408,10 +408,24 @@ table.board tbody tr:hover { background: var(--pink-soft); }
 .modal__grid { display: grid; gap: 0.8rem; }
 @media (min-width: 620px) { .modal__grid { grid-template-columns: 1fr 1fr; } }
 
-.proof-img {
-  width: 100%;
+.modal__label { font-size: 0.95rem; margin: 0 0 0.5rem; }
+.muted { color: var(--ink-soft); }
+
+/* Photos, stacked full width below the details. */
+.modal__more { margin-top: 1.2rem; }
+.photo-stack { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
+.photo-stack li { margin: 0; }
+.photo-stack__link {
+  display: block;
   border-radius: var(--radius-sm);
+  overflow: hidden;
   border: 1px solid var(--line);
+}
+.photo-stack__link:hover { border-color: var(--mint); }
+.photo-stack__img {
+  display: block;
+  width: 100%;
+  height: auto;
   background: var(--mint-soft);
 }
 .meta-list { list-style: none; margin: 0.5rem 0 0; padding: 0; display: grid; gap: 0.35rem; }

@@ -70,14 +70,12 @@ to fix or remove one.
 | `region` | string | Region slug. Must match a `slug` in `loops.yaml` (`portland`, `saco-oob`). |
 | `date` | string | `YYYY-MM-DD`. |
 | `stravaUrl` | string | Link to the activity. Empty string if none. |
-| `photoUrl` | string | Root-relative path to the WebP proof photo. |
-| `photoAlt` | string | Alt text for the photo (accessibility). |
+| `photos` | array | One to ten proof photos, each `{ "src": <root-relative WebP path>, "alt": <alt text> }`. Rendered as a gallery. |
 | `distanceMiles` | number or null | Measured from the GPX track. Falls back to a form field if the GPX has none. |
 | `durationMinutes` | number or null | Elapsed time from the GPX (first to last point). **Leaderboard rank key** (fastest first). Missing times sort last. |
 | `rerouted` | boolean | Answer to "was a shop closed, forcing a reroute?" |
 | `funRun` | boolean | `true` for a reroute, or when the run has no usable time. Sends the entry to the fun-runs table, out of the ranking. |
 | `funRunReason` | string | Why it is a fun run: `"reroute"`, `"no-time"`, or `""` for eligible runs. |
-| `shopsVisited` | string[] | Names of shops visited. |
 | `notes` | string | Free text shown in the detail modal. |
 | `routeGeoJSON` | GeoJSON or null | A `FeatureCollection` with a `LineString` for the route overlay. |
 
