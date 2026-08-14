@@ -1,0 +1,160 @@
+[
+  {
+    "id": "sample_portland_01",
+    "runnerName": "Casey R.",
+    "region": "portland",
+    "date": "2026-07-19",
+    "stravaUrl": "https://www.strava.com/activities/0000000001",
+    "photos": [
+      { "src": "/assets/images/placeholder-scoop.svg", "alt": "Casey R. with a cone at Red's Dairy Freeze." },
+      { "src": "/assets/images/placeholder-cone.svg", "alt": "Casey R. outside Twin Swirls." },
+      { "src": "/assets/images/placeholder-sundae.svg", "alt": "Casey R. finishing at Beal's on Veranda Street." }
+    ],
+    "distanceMiles": 8.4,
+    "durationMinutes": 94,
+    "rerouted": false,
+    "funRun": false,
+    "notes": "Perfect evening. Beat the sunset with two minutes to spare.",
+    "routeGeoJSON": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": { "name": "Five Scoop Loop" },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [-70.2462231, 43.6347911],
+              [-70.2600000, 43.6300000],
+              [-70.2720190, 43.6239440],
+              [-70.2500000, 43.6320000],
+              [-70.2307490, 43.6388970],
+              [-70.2420000, 43.6480000],
+              [-70.2542364, 43.6574584],
+              [-70.2560000, 43.6700000],
+              [-70.2571544, 43.6809578],
+              [-70.2500000, 43.6550000],
+              [-70.2462231, 43.6347911]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "sample_portland_02",
+    "runnerName": "Devin M.",
+    "region": "portland",
+    "date": "2026-07-25",
+    "stravaUrl": "https://www.strava.com/activities/0000000002",
+    "photos": [
+      { "src": "/assets/images/placeholder-scoop.svg", "alt": "Devin M. at the start outside Red's Dairy Freeze." },
+      { "src": "/assets/images/placeholder-cone.svg", "alt": "Devin M. next to a closed-shop sign." }
+    ],
+    "distanceMiles": 9.1,
+    "durationMinutes": 118,
+    "rerouted": true,
+    "funRun": true,
+    "funRunReason": "reroute",
+    "notes": "Willard Scoops was closed for a private event, so I rerouted. Still a blast.",
+    "routeGeoJSON": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": { "name": "Fun Run reroute" },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [-70.2462231, 43.6347911],
+              [-70.2650000, 43.6280000],
+              [-70.2720190, 43.6239440],
+              [-70.2600000, 43.6400000],
+              [-70.2542364, 43.6574584],
+              [-70.2560000, 43.6700000],
+              [-70.2571544, 43.6809578],
+              [-70.2480000, 43.6500000],
+              [-70.2462231, 43.6347911]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "sample_saco_01",
+    "runnerName": "Priya S.",
+    "region": "saco-oob",
+    "date": "2026-08-02",
+    "stravaUrl": "https://www.strava.com/activities/0000000003",
+    "photos": [
+      { "src": "/assets/images/placeholder-sundae.svg", "alt": "Priya S. at the Old Orchard Beach pier with a sundae." }
+    ],
+    "distanceMiles": 7.6,
+    "durationMinutes": 88,
+    "rerouted": false,
+    "funRun": false,
+    "notes": "Ocean breeze the whole back half. Ocean Park was the sweet finish.",
+    "routeGeoJSON": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": { "name": "Coastal Scoop Loop" },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [-70.4461633, 43.4971636],
+              [-70.4400000, 43.5040000],
+              [-70.4342091, 43.5095774],
+              [-70.4200000, 43.4950000],
+              [-70.4064740, 43.4822972],
+              [-70.4000000, 43.4950000],
+              [-70.3939692, 43.5120875],
+              [-70.3890000, 43.5060000],
+              [-70.3852727, 43.5005432],
+              [-70.4100000, 43.4930000],
+              [-70.4461633, 43.4971636]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "sample_saco_02",
+    "runnerName": "Marcus T.",
+    "region": "saco-oob",
+    "date": "2026-08-09",
+    "stravaUrl": "https://www.strava.com/activities/0000000004",
+    "photos": [
+      { "src": "/assets/images/placeholder-cone.svg", "alt": "Marcus T. mid-loop on Saco Main Street." }
+    ],
+    "distanceMiles": 7.9,
+    "durationMinutes": null,
+    "rerouted": false,
+    "funRun": true,
+    "funRunReason": "no-time",
+    "notes": "Watch exported the route without timestamps, so this one runs for fun.",
+    "routeGeoJSON": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": { "name": "Untimed loop" },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [-70.4461633, 43.4971636],
+              [-70.4342091, 43.5095774],
+              [-70.4064740, 43.4822972],
+              [-70.3939692, 43.5120875],
+              [-70.3852727, 43.5005432],
+              [-70.4461633, 43.4971636]
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

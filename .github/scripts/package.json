@@ -1,0 +1,17 @@
+{
+  "name": "five-scoop-loop-processor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Processes ice cream run submissions: photos to WebP, GPX to simplified GeoJSON.",
+  "type": "commonjs",
+  "scripts": {
+    "process": "node process.js"
+  },
+  "dependencies": {
+    "@tmcw/togeojson": "^5.8.1",
+    "@turf/simplify": "^7.1.0",
+    "@xmldom/xmldom": "^0.8.10",
+    "node-fetch": "^3.3.2",
+    "sharp": "^0.33.5"
+  }
+}

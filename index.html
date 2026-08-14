@@ -1,0 +1,260 @@
+---
+layout: default
+title: null
+---
+<!-- Data handed from Jekyll to the browser -->
+<script id="loops-data" type="application/json">{{ site.data.loops.loops.loops | jsonify }}</script>
+<script id="submissions-data" type="application/json">{{ site.data.submissions | jsonify }}</script>
+
+<div x-data="scoopApp()" x-init="initApp()">
+
+  <!-- ---------------- Hero ---------------- -->
+  <section class="hero">
+    <h1>The Five Scoop Loop</h1>
+    <p class="lead">
+      Run one continuous loop, visit five ice cream shops, eat a scoop at each,
+      and finish back where you started.
+    </p>
+    <p class="hero__cta">
+      <a class="btn btn--primary" href="#leaderboard">See the leaderboard</a>
+      <a class="btn btn--ghost" href="{{ '/rules/' | relative_url }}">Read the rules</a>
+    </p>
+  </section>
+
+  <!-- ---------------- Region selector ---------------- -->
+  <section class="section" aria-labelledby="regions-h">
+    <div class="section__head">
+      <h2 id="regions-h">Pick your loop</h2>
+      <p>Choose a region to see its shops on the map and its leaderboard below.</p>
+    </div>
+
+    <div class="region-tabs" role="group" aria-label="Choose a region">
+      <template x-for="region in regions" :key="region.slug">
+        <button
+          type="button"
+          class="region-tab"
+          :aria-pressed="activeRegion === region.slug ? 'true' : 'false'"
+          x-text="region.name"
+          @click="setRegion(region.slug)"></button>
+      </template>
+    </div>
+
+    <p class="visually-hidden" aria-live="polite" x-text="'Showing ' + currentRegion.name"></p>
+
+    <!-- ---------------- Map + shop list ---------------- -->
+    <p class="region-blurb" x-text="currentRegion.blurb"></p>
+
+    <div class="loop-grid">
+      <div
+        id="loops-map"
+        class="map"
+        role="application"
+        :aria-label="'Map of ice cream shops for the ' + currentRegion.name + ' loop'"></div>
+
+      <div>
+        <h3 class="visually-hidden">Shops in this loop</h3>
+        <ul class="shop-list">
+          <template x-for="loc in currentRegion.locations" :key="loc.id">
+            <li class="shop-card">
+              <button
+                type="button"
+                class="shop-card__name"
+                @click="focusShop(loc)">
+                <span x-text="loc.name"></span>
+              </button>
+              <template x-if="loc.seasonal">
+                <span class="badge">Seasonal</span>
+              </template>
+              <p class="shop-card__addr" x-text="loc.address"></p>
+              <p class="shop-card__hours">
+                <strong>Today:</strong> <span x-text="todayHours(loc)"></span>
+              </p>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------------- Leaderboard ---------------- -->
+  <section class="section" id="leaderboard" aria-labelledby="board-h">
+    <div class="section__head">
+      <h2 id="board-h">Leaderboard</h2>
+      <p x-text="'Completed loops in ' + currentRegion.name + ', ranked by finish time.'"></p>
+    </div>
+
+    <div class="table-wrap">
+      <table class="board">
+        <caption class="visually-hidden">Eligible completed loops, fastest first</caption>
+        <thead>
+          <tr>
+            <th scope="col">Rank</th>
+            <th scope="col">Runner</th>
+            <th scope="col">Date</th>
+            <th scope="col">Distance</th>
+            <th scope="col">Time</th>
+            <th scope="col"><span class="visually-hidden">Details</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-if="eligible.length === 0">
+            <tr><td class="empty" colspan="6">No finishers yet for this loop. Be the first.</td></tr>
+          </template>
+          <template x-for="(sub, i) in eligible" :key="sub.id">
+            <tr>
+              <td class="rank" :class="i < 3 ? 'rank--medal' : ''" x-text="medal(i)"></td>
+              <th scope="row" x-text="sub.runnerName"></th>
+              <td x-text="formatDate(sub.date)"></td>
+              <td class="num" x-text="sub.distanceMiles ? sub.distanceMiles.toFixed(1) + ' mi' : '—'"></td>
+              <td class="num" x-text="formatDuration(sub.durationMinutes)"></td>
+              <td>
+                <button type="button" class="link-btn" @click="openSubmission(sub)">
+                  View<span class="visually-hidden"> details for <span x-text="sub.runnerName"></span></span>
+                </button>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ---------------- Fun runs ---------------- -->
+    <div class="subhead">
+      <h3>Fun runs</h3>
+      <p class="hint">Not ranked, because of a shop-closure reroute or a run we could not time. Still worth celebrating.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table class="board">
+        <caption class="visually-hidden">Fun runs, not eligible for ranking</caption>
+        <thead>
+          <tr>
+            <th scope="col">Runner</th>
+            <th scope="col">Date</th>
+            <th scope="col">Distance</th>
+            <th scope="col">Time</th>
+            <th scope="col"><span class="visually-hidden">Details</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-if="funRuns.length === 0">
+            <tr><td class="empty" colspan="5">No fun runs logged for this loop yet.</td></tr>
+          </template>
+          <template x-for="sub in funRuns" :key="sub.id">
+            <tr>
+              <th scope="row" x-text="sub.runnerName"></th>
+              <td x-text="formatDate(sub.date)"></td>
+              <td class="num" x-text="sub.distanceMiles ? sub.distanceMiles.toFixed(1) + ' mi' : '—'"></td>
+              <td class="num" x-text="formatDuration(sub.durationMinutes)"></td>
+              <td>
+                <button type="button" class="link-btn" @click="openSubmission(sub)">
+                  View<span class="visually-hidden"> details for <span x-text="sub.runnerName"></span></span>
+                </button>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ---------------- Submission detail modal ---------------- -->
+  <template x-teleport="body">
+    <div
+      class="modal-backdrop"
+      x-show="modalOpen"
+      x-cloak
+      @keydown.escape.window="closeModal()"
+      @click.self="closeModal()"
+      x-transition.opacity>
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="selected ? selected.runnerName + ' loop details' : 'Loop details'"
+        x-trap.noscroll.inert="modalOpen"
+        @click.stop>
+        <template x-if="selected">
+          <div>
+            <div class="modal__head">
+              <div>
+                <h2 x-text="selected.runnerName"></h2>
+                <p class="modal__sub">
+                  <span x-text="formatDate(selected.date)"></span>
+                  <span>·</span>
+                  <span x-text="currentRegion.name"></span>
+                  <span>·</span>
+                  <span
+                    class="pill"
+                    :class="selected.funRun ? 'pill--fun' : 'pill--eligible'"
+                    x-text="funRunPillText(selected)"></span>
+                </p>
+              </div>
+              <button type="button" class="modal__close" @click="closeModal()" aria-label="Close details">&times;</button>
+            </div>
+
+            <div class="modal__body">
+              <div class="modal__grid">
+                <div>
+                  <ul class="meta-list">
+                    <li><span>Distance</span><span x-text="selected.distanceMiles ? selected.distanceMiles.toFixed(1) + ' mi' : '—'"></span></li>
+                    <li><span>Time</span><span x-text="formatDuration(selected.durationMinutes)"></span></li>
+                    <li>
+                      <span>Strava</span>
+                      <span>
+                        <template x-if="selected.stravaUrl">
+                          <a :href="selected.stravaUrl" target="_blank" rel="noopener noreferrer">Open activity</a>
+                        </template>
+                        <template x-if="!selected.stravaUrl"><span>—</span></template>
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <div id="submission-map" class="map map-detail"
+                       role="application"
+                       aria-label="Map of this runner's route overlaid on the loop's shops"></div>
+                  <template x-if="selected.notes">
+                    <p x-text="selected.notes"></p>
+                  </template>
+                </div>
+              </div>
+
+              <!-- All photos, full width, below the details -->
+              <div class="modal__more">
+                <h3 class="modal__label">Photos</h3>
+                <template x-if="photoList(selected).length">
+                  <ul class="photo-stack">
+                    <template x-for="(photo, i) in photoList(selected)" :key="i">
+                      <li>
+                        <a class="photo-stack__link" :href="withBase(photo.src)" target="_blank" rel="noopener noreferrer">
+                          <img
+                            class="photo-stack__img"
+                            :src="withBase(photo.src)"
+                            :alt="photo.alt || (selected.runnerName + ' photo ' + (i + 1))"
+                            loading="lazy"
+                            @error="$el.closest('li').remove()">
+                        </a>
+                      </li>
+                    </template>
+                  </ul>
+                </template>
+                <template x-if="!photoList(selected).length">
+                  <p class="muted">No photos provided.</p>
+                </template>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </template>
+
+</div>
+
+<style>[x-cloak]{ display:none !important; }</style>
+
+<script src="{{ '/assets/js/loops-map.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/submission-map.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/app.js' | relative_url }}"></script>
