@@ -18,6 +18,8 @@
   --bg: #fdf6ee;
   --focus: #1d4ed8;
   --gold: #b45309;          /* medal/accent text, AA on cream */
+  --on-mint: #ffffff;       /* text on a solid --mint fill */
+  --on-pink: #ffffff;       /* text on a solid --pink fill */
 
   --shadow-sm: 0 1px 2px rgba(60, 40, 20, 0.08);
   --shadow-md: 0 6px 20px rgba(60, 40, 20, 0.12);
@@ -42,6 +44,9 @@
     --bg: #161311;
     --focus: #9ec1ff;
     --gold: #f0b34a;
+    /* Dark-mode accents are light, so text on them must be dark. */
+    --on-mint: #06201c;
+    --on-pink: #33091a;
     --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.45);
   }
 }
@@ -82,7 +87,7 @@ img { max-width: 100%; height: auto; display: block; }
   left: -9999px;
   top: 0;
   background: var(--ink);
-  color: #fff;
+  color: var(--bg);
   padding: 0.6rem 1rem;
   z-index: 2000;
   border-radius: 0 0 8px 0;
@@ -128,7 +133,7 @@ img { max-width: 100%; height: auto; display: block; }
   border-radius: 999px;
 }
 .site-nav a:hover { background: var(--pink-soft); color: var(--ink); }
-.site-nav a[aria-current="page"] { background: var(--mint); color: #fff; }
+.site-nav a[aria-current="page"] { background: var(--mint); color: var(--on-mint); }
 
 .site-footer {
   margin-top: 3rem;
@@ -170,8 +175,8 @@ img { max-width: 100%; height: auto; display: block; }
   cursor: pointer;
   font-size: 1rem;
 }
-.btn--primary { background: var(--pink); color: #fff; }
-.btn--primary:hover { background: color-mix(in srgb, var(--pink) 82%, #000); color: #fff; }
+.btn--primary { background: var(--pink); color: var(--on-pink); }
+.btn--primary:hover { background: color-mix(in srgb, var(--pink) 82%, #000); color: var(--on-pink); }
 .btn--ghost { background: transparent; border-color: var(--line); color: var(--ink); }
 .btn--ghost:hover { border-color: var(--mint); color: var(--ink); }
 
@@ -200,10 +205,10 @@ img { max-width: 100%; height: auto; display: block; }
   cursor: pointer;
 }
 .region-tab:hover { border-color: var(--mint); }
-.region-tab[aria-selected="true"] {
+.region-tab[aria-pressed="true"] {
   background: var(--mint);
   border-color: var(--mint);
-  color: #fff;
+  color: var(--on-mint);
 }
 
 /* -------------------- Map + shop list -------------------- */
@@ -239,13 +244,12 @@ img { max-width: 100%; height: auto; display: block; }
   display: grid;
   gap: 0.6rem;
   max-height: 60vh;
-  overflow: auto;
 }
 .shop-card {
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   background: var(--card);
-  padding: 0.75rem 0.9rem;
+  padding: 0.65rem 0.75rem;
   box-shadow: var(--shadow-sm);
 }
 .shop-card button.shop-card__name {
@@ -335,7 +339,7 @@ table.board tbody tr:hover { background: var(--pink-soft); }
 .link-btn {
   appearance: none;
   background: var(--mint);
-  color: #fff;
+  color: var(--on-mint);
   border: none;
   border-radius: 999px;
   padding: 0.35rem 0.8rem;
@@ -402,7 +406,7 @@ table.board tbody tr:hover { background: var(--pink-soft); }
   cursor: pointer;
   flex: none;
 }
-.modal__close:hover { background: var(--pink); color: #fff; }
+.modal__close:hover { background: var(--pink); color: var(--on-pink); }
 .modal__body { padding: 0.6rem 1.1rem 1.2rem; }
 .modal__body p { margin: 0.4rem 0; }
 .modal__grid { display: grid; gap: 0.8rem; }

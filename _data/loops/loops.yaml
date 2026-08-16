@@ -1,7 +1,7 @@
 loops:
   - name: "Portland/South Portland"
     slug: portland
-    blurb: "Cross the bridge between South Portland's stands and the peninsula's classics."
+    blurb: "Cross the bridge between South Portland's stands and the peninsula's classics. ~13 miles give or take."
     locations:
       - id: reds_dairy_freeze
         name: "Red's Dairy Freeze"
@@ -19,37 +19,37 @@ loops:
           lat: 43.6347911
           lon: -70.2462231
 
-      - id: twin_swirls
-        name: "Twin Swirls"
-        address: "741 Broadway, South Portland, ME 04106"
+      - id: sammys_scoops
+        name: "Sammy's Scoops"
+        address: "51 Ocean Ave, Portland, ME 04103"
         hours:
-          Monday: 12PM-9PM
-          Tuesday: 12PM-9PM
-          Wednesday: 12PM-9PM
-          Thursday: 12PM-9PM
-          Friday: 12PM-9PM
+          Monday: 2PM-9PM
+          Tuesday: 2PM-9PM
+          Wednesday: 2PM-9PM
+          Thursday: 2PM-9PM
+          Friday: 2PM-9PM
           Saturday: 12PM-9PM
           Sunday: 12PM-9PM
         seasonal: true
         coordinates:
-          lat: 43.623944
-          lon: -70.272019
+          lat: 43.6734002
+          lon: -70.283405
 
-      - id: willard_scoops
-        name: "Willard Scoops"
-        address: "429 Preble St, South Portland, ME 04106"
+      - id: dairy_queen_south_portland
+        name: "Dairy Queen (South Portland)"
+        address: "727 Broadway, South Portland, ME 04106"
         hours:
-          Monday: 1PM-9:30PM
-          Tuesday: 1PM-9:30PM
-          Wednesday: 1PM-9:30PM
-          Thursday: 1PM-9:30PM
-          Friday: 1PM-9:30PM
-          Saturday: 1PM-9:30PM
-          Sunday: 1PM-9:30PM
+          Monday: 11AM-9:30PM
+          Tuesday: 11AM-9:30PM
+          Wednesday: 11AM-9:30PM
+          Thursday: 11AM-9:30PM
+          Friday: 11AM-9:30PM
+          Saturday: 11AM-10PM
+          Sunday: 11AM-10PM
         seasonal: true
         coordinates:
-          lat: 43.638897
-          lon: -70.230749
+          lat: 43.62968
+          lon: -70.29301
 
       - id: mdi_exchange_st
         name: "Mount Desert Island Ice Cream"
@@ -85,7 +85,7 @@ loops:
 
   - name: "Saco/Old Orchard Beach"
     slug: saco-oob
-    blurb: "A coastal run from Saco's Main Street down to the Old Orchard Beach pier."
+    blurb: "A coastal run from Saco's Main Street down to the Old Orchard Beach hitting some classics along the way. ~10 miles give or take."
     locations:
       - id: saco_scoop
         name: "The Saco Scoop"

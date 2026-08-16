@@ -5,7 +5,7 @@ description: >-
   five ice cream shops across Maine, eat at each one, and return to your start.
 # Set this to your published URL. For a project site it is
 # https://<user>.github.io/<repo>. Leave baseurl empty for a user/org site.
-url: ""
+url: "https://jasonday.github.io"
 baseurl: "/The-Five-Scoop-Loop"
 
 # Build settings
