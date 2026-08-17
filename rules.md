@@ -24,7 +24,7 @@ Whether you’re chasing the leaderboard or just out for a joyful sugar‑powere
 * Minimum: one scoop (generally, a “small”) or equivalent dairy-free/vegan option.
 * Ice cream must be purchased on-site — no ordering ahead.
 * You may not cut in line or otherwise disrupt normal customer flow.
-* Ice cream must be consumed on the premises — meaning the shop’s seating area, patio, or designated outdoor space. Eating while walking away does not count.
+* Ice cream must be *completely* consumed *on premises* — meaning the shop’s seating area, patio, or designated outdoor space. Eating while walking away does not count.
 * No sharing the required serving between multiple runners.
 * If a shop offers only soft‑serve or only hard‑serve, either is acceptable.
 
@@ -32,10 +32,9 @@ Whether you’re chasing the leaderboard or just out for a joyful sugar‑powere
 * Take a photo or video at each shop showing you eating the ice cream
 * Photos or videos must be taken during the run and must clearly show the shop name or identifiable features.
 
-
 ### Submit:
 * A public activity link (Strava, Garmin, etc.)
-* Your five photos, or a link to an Instagram post or YouTube video containing your evidence
+* Your five photos, or a link to an Instagram post or YouTube video containing your evidence. 
 * A GPX file
 * Optional: a selfie at the final shop to celebrate your survival
 * If running as a group, each runner must submit their own activity link and photos.
@@ -45,6 +44,7 @@ Whether you’re chasing the leaderboard or just out for a joyful sugar‑powere
 * You may choose any order of shops and run any legal pedestrian route (roads, sidewalks, trails).
 * Total distance will vary depending on your chosen path — strategy matters.
 * If you choose to consume your ice cream at the start (at your starting shop) rather than at the end, you must start your GPS recording before entering the line. Typically this means starting your watch on the sidewalk or outside the shop — the same place you will finish your loop.
+* If you choose to consume your ice cream at the end (at your starting shop), you must not stop your GPS recording until you have completely consumed the ice cream. 
 
 ### Safety & Conduct
 * Follow all traffic laws and run safely.
