@@ -407,6 +407,23 @@ table.board tbody tr:hover { background: var(--pink-soft); }
   flex: none;
 }
 .modal__close:hover { background: var(--pink); color: var(--on-pink); }
+.modal__actions { display: flex; align-items: center; gap: 0.5rem; flex: none; }
+.btn-share {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 0.4rem 0.85rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+.btn-share:hover { border-color: var(--mint); }
 .modal__body { padding: 0.6rem 1.1rem 1.2rem; }
 .modal__body p { margin: 0.4rem 0; }
 .modal__grid { display: grid; gap: 0.8rem; }
@@ -414,6 +431,48 @@ table.board tbody tr:hover { background: var(--pink-soft); }
 
 .modal__label { font-size: 0.95rem; margin: 0 0 0.5rem; }
 .muted { color: var(--ink-soft); }
+
+/* Alternate evidence: provider-native iframes, or link card fallbacks. */
+.modal__evidence { margin-top: 1.2rem; }
+.evidence-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
+.evidence-list li { margin: 0; }
+.embed {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #000;
+}
+.embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.evidence-card {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  text-decoration: none;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem;
+}
+.evidence-card:hover { border-color: var(--mint); }
+.evidence-card__thumb {
+  width: 120px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex: none;
+  background: var(--mint-soft);
+}
+.evidence-card__meta { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+.evidence-card__title { font-weight: 700; }
+.evidence-card__provider { color: var(--ink-soft); font-size: 0.85rem; }
 
 /* Photos, stacked full width below the details. */
 .modal__more { margin-top: 1.2rem; }

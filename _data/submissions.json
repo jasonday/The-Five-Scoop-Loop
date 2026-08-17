@@ -4,7 +4,25 @@
     "runnerName": "Casey R.",
     "region": "portland",
     "date": "2026-07-19",
-    "stravaUrl": "https://www.strava.com/activities/0000000001",
+    "activityUrl": "https://www.strava.com/activities/0000000001",
+    "evidence": [
+      {
+        "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+        "title": "Casey's Five Scoop Loop recap",
+        "provider": "YouTube",
+        "thumbnailUrl": null,
+        "iframeSrc": "https://www.youtube.com/embed/aqz-KE-bpKQ",
+        "aspectRatio": 1.7778
+      },
+      {
+        "url": "https://www.instagram.com/p/EXAMPLE456/",
+        "title": "Finish-line boomerang at Beal's",
+        "provider": "Instagram",
+        "thumbnailUrl": "/assets/images/placeholder-sundae.svg",
+        "iframeSrc": null,
+        "aspectRatio": null
+      }
+    ],
     "photos": [
       { "src": "/assets/images/placeholder-scoop.svg", "alt": "Casey R. with a cone at Red's Dairy Freeze." },
       { "src": "/assets/images/placeholder-cone.svg", "alt": "Casey R. outside Twin Swirls." },
@@ -46,7 +64,17 @@
     "runnerName": "Devin M.",
     "region": "portland",
     "date": "2026-07-25",
-    "stravaUrl": "https://www.strava.com/activities/0000000002",
+    "activityUrl": "https://www.strava.com/activities/0000000002",
+    "evidence": [
+      {
+        "url": "https://www.instagram.com/p/EXAMPLE123/",
+        "title": "Devin's reroute reel",
+        "provider": "Instagram",
+        "thumbnailUrl": "/assets/images/placeholder-cone.svg",
+        "iframeSrc": null,
+        "aspectRatio": null
+      }
+    ],
     "photos": [
       { "src": "/assets/images/placeholder-scoop.svg", "alt": "Devin M. at the start outside Red's Dairy Freeze." },
       { "src": "/assets/images/placeholder-cone.svg", "alt": "Devin M. next to a closed-shop sign." }
@@ -86,7 +114,7 @@
     "runnerName": "Priya S.",
     "region": "saco-oob",
     "date": "2026-08-02",
-    "stravaUrl": "https://www.strava.com/activities/0000000003",
+    "activityUrl": "https://connect.garmin.com/modern/activity/0000000003",
     "photos": [
       { "src": "/assets/images/placeholder-sundae.svg", "alt": "Priya S. at the Old Orchard Beach pier with a sundae." }
     ],
@@ -126,7 +154,7 @@
     "runnerName": "Marcus T.",
     "region": "saco-oob",
     "date": "2026-08-09",
-    "stravaUrl": "https://www.strava.com/activities/0000000004",
+    "activityUrl": "https://www.strava.com/activities/0000000004",
     "photos": [
       { "src": "/assets/images/placeholder-cone.svg", "alt": "Marcus T. mid-loop on Saco Main Street." }
     ],

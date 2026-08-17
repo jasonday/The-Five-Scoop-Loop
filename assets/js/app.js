@@ -28,6 +28,7 @@ function scoopApp() {
     subMap: null,
     modalOpen: false,
     selected: null,
+    shareCopied: false,
 
     initApp: function () {
       if (this.regions.length) {
@@ -35,6 +36,12 @@ function scoopApp() {
       }
       this.loopsMap = new window.LoopsMap("loops-map");
       this.loopsMap.renderRegion(this.currentRegion);
+
+      // Deep links: /#/sub/<id> opens that entry, and back/forward work.
+      var self = this;
+      window.addEventListener("hashchange", function () { self.syncFromHash(); });
+      window.addEventListener("popstate", function () { self.syncFromHash(); });
+      this.syncFromHash();
     },
 
     get currentRegion() {
@@ -71,9 +78,33 @@ function scoopApp() {
       document.getElementById("loops-map").scrollIntoView({ behavior: "smooth", block: "nearest" });
     },
 
-    openSubmission: function (sub) {
+    // ---------- modal + deep-link routing ----------
+    // The URL hash is kept in sync with the open entry. openSubmission/closeModal
+    // update the hash; syncFromHash applies whatever the hash says (on load,
+    // hashchange, and back/forward).
+    parseHash: function () {
+      var m = (window.location.hash || "").match(/^#\/sub\/(.+)$/);
+      return m ? decodeURIComponent(m[1]) : null;
+    },
+
+    syncFromHash: function () {
+      var id = this.parseHash();
+      if (id) {
+        var sub = this.submissions.find(function (s) { return s.id === id; });
+        if (sub) { this.applyOpen(sub); return; }
+      }
+      if (this.modalOpen) this.modalOpen = false;
+    },
+
+    applyOpen: function (sub) {
+      // Make sure the modal's context (region map, leaderboard) matches the entry.
+      if (sub.region && sub.region !== this.activeRegion) {
+        this.activeRegion = sub.region;
+        this.loopsMap.renderRegion(this.currentRegion);
+      }
       this.selected = sub;
       this.modalOpen = true;
+      this.shareCopied = false;
       var self = this;
       this.$nextTick(function () {
         if (!self.subMap) self.subMap = new window.SubmissionMap("submission-map");
@@ -81,8 +112,51 @@ function scoopApp() {
       });
     },
 
+    openSubmission: function (sub) {
+      this.applyOpen(sub);
+      var target = "#/sub/" + encodeURIComponent(sub.id);
+      if (window.location.hash !== target) {
+        history.pushState(null, "", target);
+      }
+    },
+
     closeModal: function () {
       this.modalOpen = false;
+      // Drop the #/sub/... hash without adding a history entry or reloading.
+      if (this.parseHash()) {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
+    },
+
+    shareUrl: function (sub) {
+      return window.location.origin + window.location.pathname + "#/sub/" + encodeURIComponent(sub.id);
+    },
+
+    copyShareLink: function () {
+      if (!this.selected) return;
+      var url = this.shareUrl(this.selected);
+      var self = this;
+      var done = function () {
+        self.shareCopied = true;
+        setTimeout(function () { self.shareCopied = false; }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done).catch(function () { self.copyFallback(url, done); });
+      } else {
+        this.copyFallback(url, done);
+      }
+    },
+
+    copyFallback: function (text, done) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "absolute";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) { /* no-op */ }
+      document.body.removeChild(ta);
     },
 
     // ---------- formatters ----------
@@ -118,6 +192,34 @@ function scoopApp() {
       if (Array.isArray(sub.photos)) return sub.photos.filter(function (p) { return p && p.src; });
       if (sub.photoUrl) return [{ src: sub.photoUrl, alt: sub.photoAlt }];
       return [];
+    },
+
+    // Normalized list of evidence embeds (tolerates the older single-object shape).
+    evidenceList: function (sub) {
+      if (!sub) return [];
+      var e = sub.evidence;
+      if (Array.isArray(e)) return e.filter(Boolean);
+      if (e && e.url) return [e];
+      return [];
+    },
+
+    // The activity can be Strava, Garmin, Nike Run Club, and so on.
+    activityProvider: function (url) {
+      if (!url) return "";
+      if (/strava\./i.test(url)) return "Strava";
+      if (/garmin|connect\.garmin/i.test(url)) return "Garmin";
+      if (/nike/i.test(url)) return "Nike Run Club";
+      if (/runkeeper/i.test(url)) return "Runkeeper";
+      if (/mapmyrun|mapmyfitness/i.test(url)) return "MapMyRun";
+      if (/komoot/i.test(url)) return "komoot";
+      if (/coros/i.test(url)) return "COROS";
+      if (/suunto/i.test(url)) return "Suunto";
+      return "";
+    },
+
+    activityLinkText: function (url) {
+      var provider = this.activityProvider(url);
+      return provider ? "View on " + provider : "Open activity";
     },
 
     funRunPillText: function (sub) {

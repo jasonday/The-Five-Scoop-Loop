@@ -33,6 +33,10 @@ const SUBMISSIONS_FILE = path.join(ROOT, '_data/submissions.json');
 const IMAGE_DIR = path.join(ROOT, 'assets/images/submissions');
 // finalize.js reads this after the commit to mark rows processed + trash files.
 const MANIFEST_FILE = process.env.PROCESSED_MANIFEST || path.join(__dirname, 'processed-manifest.json');
+// Committed cache of resolved embeds, keyed by URL, so we hit Iframely once
+// per link ever. The key stays in the environment and never in this file.
+const EMBEDS_FILE = path.join(__dirname, 'embeds-cache.json');
+const IFRAMELY_KEY = process.env.IFRAMELY_KEY;
 
 // Map whatever the form/sheet calls a region to the slug used in loops.yaml.
 const REGION_SLUGS = {
@@ -53,14 +57,32 @@ function slugifyRegion(value) {
   return REGION_SLUGS[key] || key.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
-// Read a value from a row by trying several likely header names.
+// Read a value from a row by trying several header names. Exact match first,
+// then a case- and whitespace-insensitive fallback so small header edits still
+// resolve.
 function pick(row, keys) {
   for (const k of keys) {
     if (row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== '') {
       return row[k];
     }
   }
+  const norm = (s) => String(s).trim().toLowerCase();
+  const map = {};
+  for (const rk of Object.keys(row)) map[norm(rk)] = row[rk];
+  for (const k of keys) {
+    const v = map[norm(k)];
+    if (v !== undefined && v !== null && String(v).trim() !== '') return v;
+  }
   return undefined;
+}
+
+// Normalize a date cell (ISO datetime, Date, or M/D/YYYY) to YYYY-MM-DD.
+function normalizeDate(value) {
+  if (!value) return '';
+  const s = String(value);
+  if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
+  const d = new Date(s);
+  return isNaN(d) ? '' : d.toISOString().slice(0, 10);
 }
 
 // "Yes" / true / checked -> true
@@ -103,12 +125,18 @@ function collectPhotoIds(row) {
   return ids.slice(0, 10);
 }
 
-// A stable id derived from the row itself, so reprocessing the same submission
-// updates its entry in place instead of creating a duplicate. Prefers an
-// explicit id column, then the form Timestamp, then the Strava link.
+// The sheet's ID column value, if present (the Apps Script fills it in).
+function sheetId(row) {
+  return String(pick(row, ['ID', 'Id', 'Submission ID']) || '').trim();
+}
+
+// The submission id used on the site (photo filenames, deep links). When the
+// sheet has an ID column we use it directly (sanitized); otherwise we derive a
+// stable id from the row so reprocessing updates in place instead of duplicating.
 function stableId(row) {
+  const explicit = sheetId(row);
+  if (explicit) return explicit.replace(/[^a-zA-Z0-9_-]/g, '');
   const key =
-    pick(row, ['Submission ID', 'ID', 'Id']) ||
     pick(row, ['Timestamp']) ||
     pick(row, ['Strava Activity Link', 'Strava', 'Activity Link']) ||
     ('row-' + row.rowIndex);
@@ -221,6 +249,100 @@ async function processGpx(url) {
   };
 }
 
+// Every http(s) URL in a cell, de-duplicated. Users enter one per line, but may
+// use commas or spaces; those are all delimiters the regex naturally stops on.
+function allUrls(value) {
+  const matches = String(value || '').match(/https?:\/\/[^\s,'"]+/g) || [];
+  const seen = [];
+  for (const raw of matches) {
+    const url = raw.replace(/[),.;]+$/, ''); // trim trailing prose punctuation
+    if (url && !seen.includes(url)) seen.push(url);
+  }
+  return seen.slice(0, 10);
+}
+
+// A thumbnail href from an Iframely response, if any.
+function pickThumbnail(data) {
+  const links = data.links || {};
+  const groups = [links.thumbnail, links.image, links.icon].filter(Array.isArray);
+  for (const group of groups) {
+    if (group[0] && group[0].href) return group[0].href;
+  }
+  return data.thumbnail_url || null;
+}
+
+// A provider-native iframe (no Iframely key baked in) from the response, if any.
+function extractIframe(data) {
+  const links = data.links || {};
+  const candidates = [].concat(links.player || [], links.reader || [], links.app || []);
+  for (const l of candidates) {
+    if (!l || !l.href) continue;
+    if (/iframe\.ly|iframely/i.test(l.href)) continue; // that form needs the key
+    let ratio = null;
+    if (l.media) {
+      if (l.media['aspect-ratio']) ratio = Number(l.media['aspect-ratio']);
+      else if (l.media.width && l.media.height) ratio = l.media.width / l.media.height;
+    }
+    return { src: l.href, ratio: ratio && isFinite(ratio) ? Math.round(ratio * 1000) / 1000 : null };
+  }
+  return null;
+}
+
+function buildEmbed(url, data) {
+  const meta = data.meta || {};
+  const iframe = extractIframe(data);
+  return {
+    url,
+    title: meta.title || url,
+    provider: meta.site || meta.provider_name || '',
+    thumbnailUrl: pickThumbnail(data),
+    iframeSrc: iframe ? iframe.src : null,
+    aspectRatio: iframe ? iframe.ratio : null
+  };
+}
+
+// Safety net: never persist anything containing the secret key.
+function scrubKey(embed) {
+  if (!IFRAMELY_KEY) return embed;
+  for (const k of Object.keys(embed)) {
+    if (typeof embed[k] === 'string' && embed[k].includes(IFRAMELY_KEY)) embed[k] = null;
+  }
+  return embed;
+}
+
+// Resolve one URL to an embed, using (and filling) the cache.
+async function resolveOneEmbed(url, cache) {
+  if (cache[url]) return cache[url];
+
+  let embed = { url, title: url, provider: '', thumbnailUrl: null, iframeSrc: null, aspectRatio: null };
+  if (!IFRAMELY_KEY) {
+    console.warn('IFRAMELY_KEY not set; storing evidence as a plain link.');
+  } else {
+    try {
+      const api = `https://iframe.ly/api/iframely?url=${encodeURIComponent(url)}&key=${IFRAMELY_KEY}`;
+      const res = await fetch(api);
+      const data = await res.json();
+      if (data && !data.error) embed = buildEmbed(url, data);
+      else console.warn(`Iframely could not resolve ${url}:`, data && data.error);
+    } catch (err) {
+      console.error(`Iframely request failed for ${url}:`, err.message);
+    }
+  }
+
+  embed = scrubKey(embed);
+  cache[url] = embed;
+  return embed;
+}
+
+// A field may hold several evidence links (different platforms).
+async function resolveEmbeds(rawValue, cache) {
+  const embeds = [];
+  for (const url of allUrls(rawValue)) {
+    embeds.push(await resolveOneEmbed(url, cache));
+  }
+  return embeds;
+}
+
 async function run() {
   if (!APPS_SCRIPT_URL) {
     console.error('Missing APPS_SCRIPT_URL environment variable.');
@@ -241,11 +363,16 @@ async function run() {
     data = JSON.parse(fs.readFileSync(SUBMISSIONS_FILE, 'utf-8'));
   }
 
+  let embeds = {};
+  if (fs.existsSync(EMBEDS_FILE)) {
+    embeds = JSON.parse(fs.readFileSync(EMBEDS_FILE, 'utf-8'));
+  }
+
   const manifestRows = [];
 
   for (const row of rows) {
     const id = stableId(row);
-    const runnerName = pick(row, ['Runner Name', 'Name']) || 'Anonymous';
+    const runnerName = pick(row, ['Your full name', 'Runner Name', 'Name']) || 'Anonymous';
     console.log(`Processing entry for ${runnerName}...`);
 
     // A submission may include several photos (one per shop, plus a selfie).
@@ -266,7 +393,7 @@ async function run() {
     let routeGeoJSON = null;
     let gpxDistance;
     let gpxDuration;
-    const gpxField = pick(row, ['GPX File', 'GPX', 'GPS Track']);
+    const gpxField = pick(row, ['GPX file', 'GPX File', 'GPX', 'GPS Track']);
     if (gpxField) {
       try {
         const result = await processGpx(gpxField);
@@ -303,19 +430,27 @@ async function run() {
     const funRun = rerouted || missingTime;
     const funRunReason = rerouted ? 'reroute' : (missingTime ? 'no-time' : '');
 
+    // Optional alternate evidence links (YouTube, Instagram, TikTok, Strava, ...),
+    // one or more, resolved to cached embeds.
+    const evidence = await resolveEmbeds(
+      pick(row, ['Alternate evidence', 'Alternate Evidence', 'Video/Post Link']),
+      embeds
+    );
+
     const entry = {
       id,
       runnerName,
-      region: slugifyRegion(pick(row, ['Region', 'Loop'])),
-      date: pick(row, ['Date', 'Run Date']) || new Date().toISOString().split('T')[0],
-      stravaUrl: pick(row, ['Strava Activity Link', 'Strava', 'Activity Link']) || '',
+      region: slugifyRegion(pick(row, ['Which Five Scoop Loop did you complete?', 'Region', 'Loop'])),
+      date: normalizeDate(pick(row, ['Date completed', 'Date', 'Run Date'])) || new Date().toISOString().split('T')[0],
+      activityUrl: pick(row, ['Link to activity', 'Strava Activity Link', 'Strava', 'Activity Link', 'Activity']) || '',
       photos,
+      evidence,
       distanceMiles,
       durationMinutes,
       rerouted,
       funRun,
       funRunReason,
-      notes: pick(row, ['Notes', 'Comments']) || '',
+      notes: pick(row, ['Add a short note about your run', 'Notes', 'Comments']) || '',
       routeGeoJSON
     };
 
@@ -329,11 +464,14 @@ async function run() {
     }
 
     // The Drive files to trash once this entry is safely committed to GitHub.
+    // Carry the sheet ID so finalize matches the row even if rows move; rowIndex
+    // is the fallback for sheets without an ID column.
     const fileIds = [...photoIds, driveIdFrom(gpxField || '')].filter(Boolean);
-    manifestRows.push({ rowIndex: row.rowIndex, fileIds });
+    manifestRows.push({ id: sheetId(row), rowIndex: row.rowIndex, fileIds });
   }
 
   fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(data, null, 2));
+  fs.writeFileSync(EMBEDS_FILE, JSON.stringify(embeds, null, 2));
 
   // Write a manifest of rows to finalize AFTER the site content is committed.
   // finalize.js marks the sheet's Processed column and trashes the redundant

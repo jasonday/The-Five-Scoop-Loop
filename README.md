@@ -65,12 +65,13 @@ to fix or remove one.
 
 | Field | Type | Notes |
 | --- | --- | --- |
-| `id` | string | Stable id derived from the sheet row. **Do not change it.** Also the WebP filename. |
+| `id` | string | The sheet's `ID` column value (a random UUID the Apps Script fills in). Stable key for the WebP filename and the `/#/sub/<id>` share link. **Do not change it.** |
 | `runnerName` | string | Display name. |
 | `region` | string | Region slug. Must match a `slug` in `loops.yaml` (`portland`, `saco-oob`). |
 | `date` | string | `YYYY-MM-DD`. |
-| `stravaUrl` | string | Link to the activity. Empty string if none. |
+| `activityUrl` | string | Link to the recorded activity (Strava, Garmin, Nike Run Club, etc.). The provider is detected for the link label. Empty string if none. |
 | `photos` | array | One to ten proof photos, each `{ "src": <root-relative WebP path>, "alt": <alt text> }`. Rendered as a gallery. |
+| `evidence` | array | Zero or more alternate evidence links resolved via Iframely, each `{ url, title, provider, thumbnailUrl, iframeSrc, aspectRatio }`. Each renders as an embed, or a link card when there is no native iframe. |
 | `distanceMiles` | number or null | Measured from the GPX track. Falls back to a form field if the GPX has none. |
 | `durationMinutes` | number or null | Elapsed time from the GPX (first to last point). **Leaderboard rank key** (fastest first). Missing times sort last. |
 | `rerouted` | boolean | Answer to "was a shop closed, forcing a reroute?" |
@@ -81,6 +82,23 @@ to fix or remove one.
 
 The leaderboard ranks eligible (`funRun: false`) entries in a region by
 `durationMinutes`, ascending. Fun runs are listed separately and are not ranked.
+
+## Alternate evidence embeds
+
+Submissions may include an alternate evidence link (YouTube, Instagram, TikTok,
+Strava, etc.). During processing, each new link is resolved once through the
+[Iframely](https://iframely.com/) API and cached in
+`.github/scripts/embeds-cache.json` (keyed by URL), so the API is never hit
+again for a link already seen.
+
+The Iframely key is read from the `IFRAMELY_KEY` environment variable (set it as
+a repo Actions secret) and is used only server-side, during the Action. To keep
+it secret, the cache stores only key-free presentational data (title, provider,
+thumbnail, and a provider-native iframe URL when one is available); any value
+that would contain the key is dropped. Links without a native iframe (many
+social posts) render as a thumbnail-and-title card that opens the original.
+
+If `IFRAMELY_KEY` is unset, evidence links still work, just as plain link cards.
 
 ## Managing entries
 
