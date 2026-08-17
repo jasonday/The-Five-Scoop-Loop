@@ -35,6 +35,7 @@ jobs:
         working-directory: .github/scripts
         env:
           APPS_SCRIPT_URL: ${{ secrets.APPS_SCRIPT_URL }}
+          IFRAMELY_KEY: ${{ secrets.IFRAMELY_KEY }}
         run: node process.js
 
       - name: Commit changes
@@ -42,7 +43,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add _data/submissions.json assets/images/submissions
+          git add _data/submissions.json assets/images/submissions .github/scripts/embeds-cache.json
           if git diff --cached --quiet; then
             echo "No submission changes to commit."
             echo "committed=false" >> "$GITHUB_OUTPUT"

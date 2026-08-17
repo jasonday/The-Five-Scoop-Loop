@@ -179,33 +179,41 @@ title: null
             <div class="modal__head">
               <div>
                 <h2 x-text="selected.runnerName"></h2>
+                <template x-if="selected.notes">
+                    <p x-text="selected.notes"></p>
+                </template>
                 <p class="modal__sub">
-                  <span x-text="formatDate(selected.date)"></span>
-                  <span>·</span>
-                  <span x-text="currentRegion.name"></span>
-                  <span>·</span>
-                  <span
-                    class="pill"
-                    :class="selected.funRun ? 'pill--fun' : 'pill--eligible'"
-                    x-text="funRunPillText(selected)"></span>
                 </p>
               </div>
-              <button type="button" class="modal__close" @click="closeModal()" aria-label="Close details">&times;</button>
+              <div class="modal__actions">
+                <button type="button" class="btn-share" @click="copyShareLink()" :aria-label="shareCopied ? 'Link copied to clipboard' : 'Copy link to this entry'">
+                  <span aria-hidden="true">🔗</span>
+                  <span x-text="shareCopied ? 'Copied' : 'Copy link'"></span>
+                </button>
+                <button type="button" class="modal__close" @click="closeModal()" aria-label="Close details">&times;</button>
+              </div>
             </div>
+            <span class="visually-hidden" aria-live="polite" x-text="shareCopied ? 'Link copied to clipboard' : ''"></span>
 
             <div class="modal__body">
               <div class="modal__grid">
                 <div>
                   <ul class="meta-list">
+                    <li><span>Type:</span><span
+                    class="pill"
+                    :class="selected.funRun ? 'pill--fun' : 'pill--eligible'"
+                    x-text="funRunPillText(selected)"></span></li>
+                    <li><span>Loop:</span><span x-text="currentRegion.name"></span></li>
+                    <li><span>Date:</span><span x-text="formatDate(selected.date)"></span></li>
                     <li><span>Distance</span><span x-text="selected.distanceMiles ? selected.distanceMiles.toFixed(1) + ' mi' : '—'"></span></li>
                     <li><span>Time</span><span x-text="formatDuration(selected.durationMinutes)"></span></li>
                     <li>
-                      <span>Strava</span>
+                      <span>Activity</span>
                       <span>
-                        <template x-if="selected.stravaUrl">
-                          <a :href="selected.stravaUrl" target="_blank" rel="noopener noreferrer">Open activity</a>
+                        <template x-if="selected.activityUrl">
+                          <a :href="selected.activityUrl" target="_blank" rel="noopener noreferrer" x-text="activityLinkText(selected.activityUrl)"></a>
                         </template>
-                        <template x-if="!selected.stravaUrl"><span>—</span></template>
+                        <template x-if="!selected.activityUrl"><span>—</span></template>
                       </span>
                     </li>
                   </ul>
@@ -215,11 +223,42 @@ title: null
                   <div id="submission-map" class="map map-detail"
                        role="application"
                        aria-label="Map of this runner's route overlaid on the loop's shops"></div>
-                  <template x-if="selected.notes">
-                    <p x-text="selected.notes"></p>
-                  </template>
                 </div>
               </div>
+
+              <!-- Alternate evidence (one or more videos / social posts) -->
+              <template x-if="evidenceList(selected).length">
+                <div class="modal__evidence">
+                  <h3 class="modal__label" x-text="evidenceList(selected).length > 1 ? 'Videos / posts' : 'Video / post'"></h3>
+                  <ul class="evidence-list">
+                    <template x-for="(ev, i) in evidenceList(selected)" :key="i">
+                      <li>
+                        <template x-if="ev.iframeSrc">
+                          <div class="embed" :style="'aspect-ratio:' + (ev.aspectRatio || 1.7778)">
+                            <iframe
+                              :src="ev.iframeSrc"
+                              :title="ev.title || 'Embedded evidence'"
+                              loading="lazy"
+                              allowfullscreen
+                              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                          </div>
+                        </template>
+                        <template x-if="!ev.iframeSrc">
+                          <a class="evidence-card" :href="ev.url" target="_blank" rel="noopener noreferrer">
+                            <template x-if="ev.thumbnailUrl">
+                              <img class="evidence-card__thumb" :src="withBase(ev.thumbnailUrl)" alt="" loading="lazy" @error="$el.remove()">
+                            </template>
+                            <span class="evidence-card__meta">
+                              <span class="evidence-card__title" x-text="ev.title || ev.url"></span>
+                              <span class="evidence-card__provider" x-text="ev.provider || 'Open link'"></span>
+                            </span>
+                          </a>
+                        </template>
+                      </li>
+                    </template>
+                  </ul>
+                </div>
+              </template>
 
               <!-- All photos, full width, below the details -->
               <div class="modal__more">
