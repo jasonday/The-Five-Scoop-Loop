@@ -30,6 +30,12 @@ function scoopApp() {
     selected: null,
     shareCopied: false,
 
+    // One ranked board per loop type, per region.
+    boards: [
+      { type: "five", label: "Five Scoop Loop", note: "All five designated shops." },
+      { type: "three", label: "Three Scoop Loop", note: "Any three of the region's shops." }
+    ],
+
     initApp: function () {
       if (this.regions.length) {
         this.activeRegion = this.regions[0].slug;
@@ -53,18 +59,18 @@ function scoopApp() {
       );
     },
 
-    get eligible() {
+    // Ranked entries for the active region and a given loop type ("five"/"three").
+    boardFor: function (type) {
       var self = this;
       return this.submissions
-        .filter(function (s) { return s.region === self.activeRegion && !s.funRun; })
+        .filter(function (s) {
+          return s.region === self.activeRegion && (s.loopType || "five") === type;
+        })
         .sort(rankSort);
     },
 
-    get funRuns() {
-      var self = this;
-      return this.submissions
-        .filter(function (s) { return s.region === self.activeRegion && s.funRun; })
-        .sort(function (a, b) { return String(b.date || "").localeCompare(String(a.date || "")); });
+    loopTypeLabel: function (sub) {
+      return (sub && sub.loopType === "three") ? "Three Scoop Loop" : "Five Scoop Loop";
     },
 
     setRegion: function (slug) {
@@ -220,13 +226,6 @@ function scoopApp() {
     activityLinkText: function (url) {
       var provider = this.activityProvider(url);
       return provider ? "View on " + provider : "Open activity";
-    },
-
-    funRunPillText: function (sub) {
-      if (!sub.funRun) return "Eligible";
-      if (sub.funRunReason === "no-time") return "Fun run · untimed";
-      if (sub.funRunReason === "reroute") return "Fun run · rerouted";
-      return "Fun run";
     },
 
     withBase: function (url) {

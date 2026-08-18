@@ -1,5 +1,5 @@
 /* =========================================================
-   The Five Scoop Loop
+   Scoop Loops
    Custom, accessible, mobile-first styles.
    Colors chosen for WCAG AA contrast in light and dark.
    ========================================================= */
@@ -364,6 +364,9 @@ table.board tbody tr:hover { background: var(--pink-soft); }
 }
 .subhead h3 { margin: 0; font-size: 1.15rem; }
 .subhead .hint { color: var(--ink-soft); font-size: 0.9rem; margin: 0; }
+.board-block + .board-block { margin-top: 1.4rem; }
+.board-note { margin-top: 1.2rem; }
+.board-block .subhead { margin-top: 0.8rem; }
 
 /* -------------------- Modal -------------------- */
 .modal-backdrop {
@@ -503,8 +506,8 @@ table.board tbody tr:hover { background: var(--pink-soft); }
   font-size: 0.78rem;
   font-weight: 700;
 }
-.pill--eligible { background: var(--mint-soft); color: var(--mint); }
-.pill--fun { background: var(--pink-soft); color: var(--pink); }
+.pill--eligible, .pill--five { background: var(--mint-soft); color: var(--mint); }
+.pill--fun, .pill--three { background: var(--pink-soft); color: var(--pink); }
 
 .visually-hidden {
   position: absolute !important;
