@@ -1,12 +1,13 @@
-title: The Five Scoop Loop
-tagline: Run a loop, visit five ice cream shops, earn your scoops.
+title: Scoop Loops
+tagline: Run a loop, visit ice cream shops, earn your scoops.
 description: >-
   A regional ice cream run challenge. Run a single continuous loop that visits
-  five ice cream shops across Maine, eat at each one, and return to your start.
+  three or five ice cream shops across Maine, eat at each one, and return to
+  your start.
 # Set this to your published URL. For a project site it is
 # https://<user>.github.io/<repo>. Leave baseurl empty for a user/org site.
 url: "https://jasonday.github.io"
-baseurl: "/The-Five-Scoop-Loop"
+baseurl: "/scoop-loops"
 
 # Build settings
 markdown: kramdown

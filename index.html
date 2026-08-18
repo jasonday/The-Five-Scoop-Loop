@@ -10,10 +10,10 @@ title: null
 
   <!-- ---------------- Hero ---------------- -->
   <section class="hero">
-    <h1>The Five Scoop Loop</h1>
+    <h1>Scoop Loops</h1>
     <p class="lead">
-      Run one continuous loop, visit five ice cream shops, eat a scoop at each,
-      and finish back where you started.
+      Run one continuous loop, visit three or five ice cream shops, eat a scoop
+      at each, and finish back where you started.
     </p>
     <p class="hero__cta">
       <a class="btn btn--primary" href="#leaderboard">See the leaderboard</a>
@@ -76,86 +76,57 @@ title: null
     </div>
   </section>
 
-  <!-- ---------------- Leaderboard ---------------- -->
+  <!-- ---------------- Leaderboards ---------------- -->
   <section class="section" id="leaderboard" aria-labelledby="board-h">
     <div class="section__head">
-      <h2 id="board-h">Leaderboard</h2>
-      <p x-text="'Completed loops in ' + currentRegion.name + ', ranked by finish time.'"></p>
+      <h2 id="board-h">Leaderboards</h2>
+      <p x-text="'Ranked by finish time for ' + currentRegion.name + '.'"></p>
     </div>
 
-    <div class="table-wrap">
-      <table class="board">
-        <caption class="visually-hidden">Eligible completed loops, fastest first</caption>
-        <thead>
-          <tr>
-            <th scope="col">Rank</th>
-            <th scope="col">Runner</th>
-            <th scope="col">Date</th>
-            <th scope="col">Distance</th>
-            <th scope="col">Time</th>
-            <th scope="col"><span class="visually-hidden">Details</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <template x-if="eligible.length === 0">
-            <tr><td class="empty" colspan="6">No finishers yet for this loop. Be the first.</td></tr>
-          </template>
-          <template x-for="(sub, i) in eligible" :key="sub.id">
-            <tr>
-              <td class="rank" :class="i < 3 ? 'rank--medal' : ''" x-text="medal(i)"></td>
-              <th scope="row" x-text="sub.runnerName"></th>
-              <td x-text="formatDate(sub.date)"></td>
-              <td class="num" x-text="sub.distanceMiles ? sub.distanceMiles.toFixed(1) + ' mi' : '—'"></td>
-              <td class="num" x-text="formatDuration(sub.durationMinutes)"></td>
-              <td>
-                <button type="button" class="link-btn" @click="openSubmission(sub)">
-                  View<span class="visually-hidden"> details for <span x-text="sub.runnerName"></span></span>
-                </button>
-              </td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
-    </div>
+    <template x-for="board in boards" :key="board.type">
+      <div class="board-block">
+        <div class="subhead">
+          <h3 x-text="board.label"></h3>
+          <p class="hint" x-text="board.note"></p>
+        </div>
+        <div class="table-wrap">
+          <table class="board">
+            <caption class="visually-hidden" x-text="board.label + ' finishers, fastest first'"></caption>
+            <thead>
+              <tr>
+                <th scope="col">Rank</th>
+                <th scope="col">Runner</th>
+                <th scope="col">Date</th>
+                <th scope="col">Distance</th>
+                <th scope="col">Time</th>
+                <th scope="col"><span class="visually-hidden">Details</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-if="boardFor(board.type).length === 0">
+                <tr><td class="empty" colspan="6">No finishers yet. Be the first.</td></tr>
+              </template>
+              <template x-for="(sub, i) in boardFor(board.type)" :key="sub.id">
+                <tr>
+                  <td class="rank" :class="i < 3 ? 'rank--medal' : ''" x-text="medal(i)"></td>
+                  <th scope="row" x-text="sub.runnerName"></th>
+                  <td x-text="formatDate(sub.date)"></td>
+                  <td class="num" x-text="sub.distanceMiles ? sub.distanceMiles.toFixed(1) + ' mi' : '—'"></td>
+                  <td class="num" x-text="formatDuration(sub.durationMinutes)"></td>
+                  <td>
+                    <button type="button" class="link-btn" @click="openSubmission(sub)">
+                      View<span class="visually-hidden"> details for <span x-text="sub.runnerName"></span></span>
+                    </button>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </template>
 
-    <!-- ---------------- Fun runs ---------------- -->
-    <div class="subhead">
-      <h3>Fun runs</h3>
-      <p class="hint">Not ranked, because of a shop-closure reroute or a run we could not time. Still worth celebrating.</p>
-    </div>
-
-    <div class="table-wrap">
-      <table class="board">
-        <caption class="visually-hidden">Fun runs, not eligible for ranking</caption>
-        <thead>
-          <tr>
-            <th scope="col">Runner</th>
-            <th scope="col">Date</th>
-            <th scope="col">Distance</th>
-            <th scope="col">Time</th>
-            <th scope="col"><span class="visually-hidden">Details</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <template x-if="funRuns.length === 0">
-            <tr><td class="empty" colspan="5">No fun runs logged for this loop yet.</td></tr>
-          </template>
-          <template x-for="sub in funRuns" :key="sub.id">
-            <tr>
-              <th scope="row" x-text="sub.runnerName"></th>
-              <td x-text="formatDate(sub.date)"></td>
-              <td class="num" x-text="sub.distanceMiles ? sub.distanceMiles.toFixed(1) + ' mi' : '—'"></td>
-              <td class="num" x-text="formatDuration(sub.durationMinutes)"></td>
-              <td>
-                <button type="button" class="link-btn" @click="openSubmission(sub)">
-                  View<span class="visually-hidden"> details for <span x-text="sub.runnerName"></span></span>
-                </button>
-              </td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
-    </div>
+    <p class="hint board-note">Didn't finish the loop? Share your attempt on Instagram with <strong>#scooploops</strong>.</p>
   </section>
 
   <!-- ---------------- Submission detail modal ---------------- -->
@@ -199,11 +170,11 @@ title: null
               <div class="modal__grid">
                 <div>
                   <ul class="meta-list">
-                    <li><span>Type:</span><span
+                    <li><span>Loop:</span><span
                     class="pill"
-                    :class="selected.funRun ? 'pill--fun' : 'pill--eligible'"
-                    x-text="funRunPillText(selected)"></span></li>
-                    <li><span>Loop:</span><span x-text="currentRegion.name"></span></li>
+                    :class="selected.loopType === 'three' ? 'pill--three' : 'pill--five'"
+                    x-text="loopTypeLabel(selected)"></span></li>
+                    <li><span>Region:</span><span x-text="currentRegion.name"></span></li>
                     <li><span>Date:</span><span x-text="formatDate(selected.date)"></span></li>
                     <li><span>Distance</span><span x-text="selected.distanceMiles ? selected.distanceMiles.toFixed(1) + ' mi' : '—'"></span></li>
                     <li><span>Time</span><span x-text="formatDuration(selected.durationMinutes)"></span></li>

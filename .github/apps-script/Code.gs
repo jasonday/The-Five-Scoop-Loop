@@ -1,5 +1,5 @@
 /**
- * The Five Scoop Loop — submissions bridge (Google Apps Script web app).
+ * Scoop Loops — submissions bridge (Google Apps Script web app).
  *
  * Deploy this bound to the responses spreadsheet, as a Web app:
  *   - Execute as: Me

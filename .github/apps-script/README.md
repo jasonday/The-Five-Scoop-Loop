@@ -45,7 +45,7 @@ Drive advanced service (irreversible).
 1. In the responses spreadsheet: **Extensions → Apps Script**.
 2. Paste the contents of `Code.gs` and save.
 3. **Deploy → New deployment → Web app**.
-   - Description: `Five Scoop Loop submissions`
+   - Description: `Scoop Loops submissions`
    - Execute as: **Me**
    - Who has access: **Anyone**
 4. Copy the web app URL.

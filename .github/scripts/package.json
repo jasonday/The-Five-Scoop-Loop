@@ -1,5 +1,5 @@
 {
-  "name": "five-scoop-loop-processor",
+  "name": "scoop-loops-processor",
   "version": "1.0.0",
   "private": true,
   "description": "Processes ice cream run submissions: photos to WebP, GPX to simplified GeoJSON.",

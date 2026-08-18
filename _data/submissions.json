@@ -28,10 +28,9 @@
       { "src": "/assets/images/placeholder-cone.svg", "alt": "Casey R. outside Twin Swirls." },
       { "src": "/assets/images/placeholder-sundae.svg", "alt": "Casey R. finishing at Beal's on Veranda Street." }
     ],
+    "loopType": "five",
     "distanceMiles": 8.4,
     "durationMinutes": 94,
-    "rerouted": false,
-    "funRun": false,
     "notes": "Perfect evening. Beat the sunset with two minutes to spare.",
     "routeGeoJSON": {
       "type": "FeatureCollection",
@@ -68,7 +67,7 @@
     "evidence": [
       {
         "url": "https://www.instagram.com/p/EXAMPLE123/",
-        "title": "Devin's reroute reel",
+        "title": "Devin's three-scoop reel",
         "provider": "Instagram",
         "thumbnailUrl": "/assets/images/placeholder-cone.svg",
         "iframeSrc": null,
@@ -77,20 +76,18 @@
     ],
     "photos": [
       { "src": "/assets/images/placeholder-scoop.svg", "alt": "Devin M. at the start outside Red's Dairy Freeze." },
-      { "src": "/assets/images/placeholder-cone.svg", "alt": "Devin M. next to a closed-shop sign." }
+      { "src": "/assets/images/placeholder-cone.svg", "alt": "Devin M. at Twin Swirls." }
     ],
-    "distanceMiles": 9.1,
-    "durationMinutes": 118,
-    "rerouted": true,
-    "funRun": true,
-    "funRunReason": "reroute",
-    "notes": "Willard Scoops was closed for a private event, so I rerouted. Still a blast.",
+    "loopType": "three",
+    "distanceMiles": 5.2,
+    "durationMinutes": 58,
+    "notes": "Short and sweet. Three stops on a hot afternoon.",
     "routeGeoJSON": {
       "type": "FeatureCollection",
       "features": [
         {
           "type": "Feature",
-          "properties": { "name": "Fun Run reroute" },
+          "properties": { "name": "Three Scoop Loop" },
           "geometry": {
             "type": "LineString",
             "coordinates": [
@@ -118,10 +115,9 @@
     "photos": [
       { "src": "/assets/images/placeholder-sundae.svg", "alt": "Priya S. at the Old Orchard Beach pier with a sundae." }
     ],
+    "loopType": "five",
     "distanceMiles": 7.6,
     "durationMinutes": 88,
-    "rerouted": false,
-    "funRun": false,
     "notes": "Ocean breeze the whole back half. Ocean Park was the sweet finish.",
     "routeGeoJSON": {
       "type": "FeatureCollection",
@@ -158,18 +154,16 @@
     "photos": [
       { "src": "/assets/images/placeholder-cone.svg", "alt": "Marcus T. mid-loop on Saco Main Street." }
     ],
-    "distanceMiles": 7.9,
-    "durationMinutes": null,
-    "rerouted": false,
-    "funRun": true,
-    "funRunReason": "no-time",
-    "notes": "Watch exported the route without timestamps, so this one runs for fun.",
+    "loopType": "three",
+    "distanceMiles": 4.8,
+    "durationMinutes": 46,
+    "notes": "Quick three-scoop loop before the beach crowds.",
     "routeGeoJSON": {
       "type": "FeatureCollection",
       "features": [
         {
           "type": "Feature",
-          "properties": { "name": "Untimed loop" },
+          "properties": { "name": "Three Scoop Loop" },
           "geometry": {
             "type": "LineString",
             "coordinates": [

@@ -413,22 +413,15 @@ async function run() {
       ? gpxDuration
       : toNumber(pick(row, ['Duration (min)', 'Time (min)', 'Minutes']));
 
-    // Fun-run status: a closed-shop reroute, or a run we cannot time (no GPX
-    // timestamps and no form time). Untimed runs cannot be fairly ranked.
-    const rerouted = isYes(
-      pick(row, [
-        'Were any of the ice cream shops closed, causing you to reroute?',
-        'Rerouted',
-        'Reroute',
-        'Closed Shop Reroute'
-      ])
-    );
-    const missingTime = durationMinutes == null;
-    if (missingTime) {
-      console.warn(`No usable time for ${runnerName}; marking as a fun run.`);
+    // Which loop: the full five shops, or the shorter three-shop version (any
+    // three of the region's shops). Each type has its own leaderboard.
+    const loopAnswer = String(
+      pick(row, ['Did you complete the Five Scoop Loop or the Three Scoop Loop?', 'Loop Type']) || ''
+    ).toLowerCase();
+    const loopType = /three|\b3\b/.test(loopAnswer) ? 'three' : 'five';
+    if (durationMinutes == null) {
+      console.warn(`No usable time for ${runnerName}; entry will sort last on its board.`);
     }
-    const funRun = rerouted || missingTime;
-    const funRunReason = rerouted ? 'reroute' : (missingTime ? 'no-time' : '');
 
     // Optional alternate evidence links (YouTube, Instagram, TikTok, Strava, ...),
     // one or more, resolved to cached embeds.
@@ -441,15 +434,13 @@ async function run() {
       id,
       runnerName,
       region: slugifyRegion(pick(row, ['Which Five Scoop Loop did you complete?', 'Region', 'Loop'])),
+      loopType,
       date: normalizeDate(pick(row, ['Date completed', 'Date', 'Run Date'])) || new Date().toISOString().split('T')[0],
       activityUrl: pick(row, ['Link to activity', 'Strava Activity Link', 'Strava', 'Activity Link', 'Activity']) || '',
       photos,
       evidence,
       distanceMiles,
       durationMinutes,
-      rerouted,
-      funRun,
-      funRunReason,
       notes: pick(row, ['Add a short note about your run', 'Notes', 'Comments']) || '',
       routeGeoJSON
     };

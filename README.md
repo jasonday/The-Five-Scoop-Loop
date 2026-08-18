@@ -1,11 +1,12 @@
-# The Five Scoop Loop
+# Scoop Loops
 
-The goal: Run a loop that visits five ice cream shops, eat ice cream at each one, and return to your starting shop, all in a single continuous activity.
+The goal: Run a loop that visits three or five ice cream shops, eat ice cream at each one, and return to your starting shop, all in a single continuous activity.
 
 This repo is a static [Jekyll](https://jekyllrb.com/) site (hosted on GitHub
-Pages) with an interactive Leaflet map per region, a leaderboard, and a separate
-board for "fun runs." Runner submissions come in through a Google Form, are
-processed by a GitHub Action, and are served statically from `_data/`.
+Pages) with an interactive Leaflet map per region and two leaderboards per
+region (the Five Scoop Loop and the Three Scoop Loop). Runner submissions come
+in through a Google Form, are processed by a GitHub Action, and are served
+statically from `_data/`.
 
 ## How it works
 
@@ -68,20 +69,19 @@ to fix or remove one.
 | `id` | string | The sheet's `ID` column value (a random UUID the Apps Script fills in). Stable key for the WebP filename and the `/#/sub/<id>` share link. **Do not change it.** |
 | `runnerName` | string | Display name. |
 | `region` | string | Region slug. Must match a `slug` in `loops.yaml` (`portland`, `saco-oob`). |
+| `loopType` | string | `"five"` or `"three"`. Selects which of the region's two leaderboards the entry appears on. |
 | `date` | string | `YYYY-MM-DD`. |
 | `activityUrl` | string | Link to the recorded activity (Strava, Garmin, Nike Run Club, etc.). The provider is detected for the link label. Empty string if none. |
 | `photos` | array | One to ten proof photos, each `{ "src": <root-relative WebP path>, "alt": <alt text> }`. Rendered as a gallery. |
 | `evidence` | array | Zero or more alternate evidence links resolved via Iframely, each `{ url, title, provider, thumbnailUrl, iframeSrc, aspectRatio }`. Each renders as an embed, or a link card when there is no native iframe. |
 | `distanceMiles` | number or null | Measured from the GPX track. Falls back to a form field if the GPX has none. |
 | `durationMinutes` | number or null | Elapsed time from the GPX (first to last point). **Leaderboard rank key** (fastest first). Missing times sort last. |
-| `rerouted` | boolean | Answer to "was a shop closed, forcing a reroute?" |
-| `funRun` | boolean | `true` for a reroute, or when the run has no usable time. Sends the entry to the fun-runs table, out of the ranking. |
-| `funRunReason` | string | Why it is a fun run: `"reroute"`, `"no-time"`, or `""` for eligible runs. |
 | `notes` | string | Free text shown in the detail modal. |
 | `routeGeoJSON` | GeoJSON or null | A `FeatureCollection` with a `LineString` for the route overlay. |
 
-The leaderboard ranks eligible (`funRun: false`) entries in a region by
-`durationMinutes`, ascending. Fun runs are listed separately and are not ranked.
+Each region shows two leaderboards, one per `loopType` (`five` and `three`),
+each ranked by `durationMinutes` ascending. There is no fun-run board; runs that
+were not finished are simply not submitted (runners share those on Instagram).
 
 ## Alternate evidence embeds
 
