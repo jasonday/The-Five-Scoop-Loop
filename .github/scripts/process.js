@@ -85,13 +85,6 @@ function normalizeDate(value) {
   return isNaN(d) ? '' : d.toISOString().slice(0, 10);
 }
 
-// "Yes" / true / checked -> true
-function isYes(value) {
-  if (value === true) return true;
-  if (value === undefined || value === null) return false;
-  return /^(yes|y|true|1)$/i.test(String(value).trim());
-}
-
 function toNumber(value) {
   if (value === undefined || value === null || value === '') return undefined;
   const n = parseFloat(String(value).replace(/[^0-9.]/g, ''));
@@ -372,7 +365,7 @@ async function run() {
 
   for (const row of rows) {
     const id = stableId(row);
-    const runnerName = pick(row, ['Your full name', 'Runner Name', 'Name']) || 'Anonymous';
+    const runnerName = pick(row, ['Your name', 'Your full name', 'Runner Name', 'Name']) || 'Anonymous';
     console.log(`Processing entry for ${runnerName}...`);
 
     // A submission may include several photos (one per shop, plus a selfie).
@@ -433,7 +426,7 @@ async function run() {
     const entry = {
       id,
       runnerName,
-      region: slugifyRegion(pick(row, ['Which Five Scoop Loop did you complete?', 'Region', 'Loop'])),
+      region: slugifyRegion(pick(row, ['Which Scoop Loop did you complete?', 'Which Five Scoop Loop did you complete?', 'Region', 'Loop'])),
       loopType,
       date: normalizeDate(pick(row, ['Date completed', 'Date', 'Run Date'])) || new Date().toISOString().split('T')[0],
       activityUrl: pick(row, ['Link to activity', 'Strava Activity Link', 'Strava', 'Activity Link', 'Activity']) || '',

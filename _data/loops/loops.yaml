@@ -1,7 +1,7 @@
 loops:
   - name: "Portland/South Portland"
     slug: portland
-    blurb: "Cross the bridge between South Portland's stands and the peninsula's classics. ~13 miles give or take."
+    blurb: "Cross the bridge between South Portland's stands and the peninsula's classics. ~13 miles give or take for the Five Scoop Loop."
     locations:
       - id: reds_dairy_freeze
         name: "Red's Dairy Freeze"
@@ -85,7 +85,7 @@ loops:
 
   - name: "Saco/Old Orchard Beach"
     slug: saco-oob
-    blurb: "A coastal run from Saco's Main Street down to the Old Orchard Beach hitting some classics along the way. ~10 miles give or take."
+    blurb: "A coastal run from Saco's Main Street down to the Old Orchard Beach hitting some classics along the way. ~10 miles give or take for the Five Scoop Loop."
     locations:
       - id: saco_scoop
         name: "The Saco Scoop"

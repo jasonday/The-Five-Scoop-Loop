@@ -19,16 +19,12 @@ Whether you’re chasing the leaderboard or just out for a joyful sugar‑powere
 ## How the Loop Works
 * Start at **any** of the identified shops in your region and begin your GPS recording outside the shop.
 * Run to your **first different** ice cream shop and eat your first scoop there.
-* Continue running from shop to shop, eating one scoop at each stop, and finish your **fifth and final scoop** at your original starting shop to complete the loop.
-* Keep your GPS recording running until you’ve finished that final scoop.
+* Continue running from shop to shop, eating one scoop at each stop.
+  * **Five Scoop Loop:** Visit all five shops in any order you choose, then return to your starting shop to eat your **fifth and final scoop**.
+  * **Three Scoop Loop:** Choose **any three** of the five shops (strategy matters), visit two additional shops after your start, then return to your starting shop to eat your **third and final scoop**.
+* Keep your GPS recording running until you’ve finished your final scoop.
 * Your run must be recorded as **one continuous GPS activity**. Manual pauses, auto‑pause, device switching, or suspicious GPS jumps may disqualify leaderboard attempts.
 
-### Go "lite" - The Three Scoop Loop  
-For runners who want a shorter, more casual version of the challenge, the Three Scoop Loop lets you visit three shops, eat three scoops, and complete a smaller loop.
-
-Start at any shop, run to two additional shops, eat one scoop at each, and finish your third and final scoop back at your starting shop.
-
-Three Scoop Loop submissions get their own board and are celebrated separately from full Five Scoop Loop results.
 
 ---
 
