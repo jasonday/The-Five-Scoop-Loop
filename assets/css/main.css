@@ -39,9 +39,9 @@
     --cream: #1c1815;
     --ink: #f4ece5;
     --ink-soft: #c3b6ab;
-    --line: #3a322c;
-    --card: #241f1b;
-    --bg: #161311;
+    --line: #10374a;
+    --card: #051625;
+    --bg: #061829;
     --focus: #9ec1ff;
     --gold: #f0b34a;
     /* Dark-mode accents are light, so text on them must be dark. */
@@ -163,6 +163,13 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .hero__cta { display: inline-flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; }
 
+.hero__logo {
+  display: block;
+  width: 300px;
+  height: auto;
+  margin: 0 auto 1rem;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -222,8 +229,9 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 .map {
-  height: 60vh;
-  min-height: 340px;
+  height: 100%;
+  align-self: stretch;
+  min-height: 400px;
   border-radius: var(--radius);
   border: 1px solid var(--line);
   box-shadow: var(--shadow-sm);
@@ -243,7 +251,8 @@ img { max-width: 100%; height: auto; display: block; }
   padding: 0;
   display: grid;
   gap: 0.6rem;
-  max-height: 60vh;
+  align-self: stretch;
+  height: 100%
 }
 .shop-card {
   border: 1px solid var(--line);
