@@ -43,7 +43,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add _data/submissions.json assets/images/submissions .github/scripts/embeds-cache.json
+          git add _data/submissions.json assets/images/submissions
+          if [ -f .github/scripts/embeds-cache.json ]; then
+            git add .github/scripts/embeds-cache.json
+          fi
           if git diff --cached --quiet; then
             echo "No submission changes to commit."
             echo "committed=false" >> "$GITHUB_OUTPUT"

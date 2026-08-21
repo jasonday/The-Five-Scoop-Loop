@@ -42,18 +42,54 @@ Drive advanced service (irreversible).
 
 ## Deploy
 
-1. In the responses spreadsheet: **Extensions → Apps Script**.
+1. In the responses spreadsheet: **Extensions → Apps Script**. (This creates a
+   script *bound* to the spreadsheet, which is what lets it find the sheet
+   automatically. If you instead created the project from script.google.com
+   directly, it's a *standalone* script — see "Standalone script" below.)
 2. Paste the contents of `Code.gs` and save.
 3. **Deploy → New deployment → Web app**.
    - Description: `Scoop Loops submissions`
    - Execute as: **Me**
    - Who has access: **Anyone**
-4. Copy the web app URL.
+4. Copy the web app URL — use the one ending in **`/exec`** (not `/dev`; the
+   dev URL always requires you to be logged in as the script owner).
 5. In the GitHub repo: **Settings → Secrets and variables → Actions → New
    repository secret**, name it `APPS_SCRIPT_URL`, paste the URL.
 
 Re-deploy (Deploy → Manage deployments → Edit → new version) whenever you change
-`Code.gs`.
+`Code.gs`. Editing the code alone does not update the live `/exec` endpoint.
+
+### Standalone script
+
+If the project is standalone (no bound spreadsheet), `SpreadsheetApp.getActiveSpreadsheet()`
+returns nothing and `doGet`/`doPost` fail with `Cannot read properties of null
+(reading 'getSheetByName')`. Fix it once:
+
+1. In the Apps Script editor, select `setSpreadsheetId` from the function
+   dropdown next to Run.
+2. Edit the call in the code (or run it from the editor's console) with your
+   sheet's ID — the long string in its URL: `https://docs.google.com/spreadsheets/d/`**`THIS_PART`**`/edit`.
+3. Click **Run** once. Approve the permission prompt if asked.
+
+After that, `getSheet_()` uses the stored ID automatically; you do not need to
+run it again unless you change spreadsheets.
+
+### Troubleshooting
+
+Test the deployed `/exec` URL in a **private/incognito** browser window
+(logged out):
+
+- Returns HTML (a Google sign-in page) → deployment access is not set to
+  **Anyone**, or the secret points at `/dev` instead of `/exec`. On a Google
+  Workspace account, an admin policy can also block sharing web apps
+  externally — check with your admin, or move the script to a personal
+  Google account.
+- Returns `Cannot read properties of null (reading 'getSheetByName')` → this
+  is a standalone script; follow "Standalone script" above.
+- Returns `Authorization is required to perform that action` → open the
+  script editor and run `doGet` once manually to grant the Sheets/Drive
+  permission prompts, then redeploy.
+- Returns JSON (even just `[]`) → the endpoint is working correctly.
 
 ## Notes
 

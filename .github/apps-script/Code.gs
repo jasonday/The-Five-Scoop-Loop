@@ -24,8 +24,39 @@ var APPROVED_HEADER = 'Approved';
 var PROCESSED_HEADER = 'Processed';
 var ID_HEADER = 'ID';
 
+// If this script is bound to the responses spreadsheet (Extensions > Apps
+// Script from inside the sheet), getActiveSpreadsheet() finds it and no
+// further setup is needed. If it is a standalone script instead, that returns
+// null, so we fall back to a Script Property holding the sheet's ID -- set it
+// once via setSpreadsheetId() below, or in Project Settings > Script
+// Properties as SPREADSHEET_ID.
+function getSpreadsheet_() {
+  var active = SpreadsheetApp.getActiveSpreadsheet();
+  if (active) return active;
+
+  var id = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
+  if (!id) {
+    throw new Error(
+      'No active spreadsheet (this is a standalone script) and no ' +
+      'SPREADSHEET_ID script property is set. Run setSpreadsheetId(\'<id>\') ' +
+      'once from the editor, or bind this script to the sheet via ' +
+      'Extensions > Apps Script inside the spreadsheet.'
+    );
+  }
+  return SpreadsheetApp.openById(id);
+}
+
+// Run this once from the Apps Script editor (select it in the function
+// dropdown, click Run) if using a standalone script. Paste the spreadsheet ID
+// from its URL: https://docs.google.com/spreadsheets/d/PASTE_THIS_PART/edit
+function setSpreadsheetId(id) {
+  if (!id) throw new Error('Pass the spreadsheet ID, e.g. setSpreadsheetId("1Vpa4wf...")');
+  PropertiesService.getScriptProperties().setProperty('SPREADSHEET_ID', id);
+}
+
 function getSheet_() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+  var ss = getSpreadsheet_();
+  var sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) {
     throw new Error('Sheet not found: ' + SHEET_NAME);
   }
