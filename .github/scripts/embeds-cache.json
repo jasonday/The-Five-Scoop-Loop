@@ -1,1 +1,18 @@
-{}
+{
+  "https://www.instagram.com/p/DcRmxHHivCb/": {
+    "url": "https://www.instagram.com/p/DcRmxHHivCb/",
+    "title": "Piping Plovers on Instagram: \"The first Scoop Loops challenge is complete - the Five Scoop Loop in Saco/Old Orchard Beach, Maine. Visit five ice cream shops, eat a scoop at each, and run the in-betweens.   Thanks to: Scoop 1 - @dairyqueen  Scoop 2 - @fielderschoiceicecream  Scoop 3 - @theopsodafountain  Scoop 4 - @garsides.icecream  Scoop 5 - @thesacoscoop   @pipingplovers  https://jasonday.github.io/scoop-loops/  #mainerunning #runclub #runmaine #scooploops #fivescooploop #icecream\"",
+    "provider": "Instagram",
+    "thumbnailUrl": "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/778699043_18017691485873757_3904720895104520900_n.jpg?stp=cmp1_dst-jpg_e35_s640x640_tt6&_nc_cat=103&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%3D%3D&_nc_ohc=pAewQpkirgkQ7kNvwFSz6gu&_nc_oc=AdpCrMwTziIjl15lLqXmQ71QoW6BmJE5r-djcjM4SjqCyfgfLUJpWOfMr84e9aN2ChY&_nc_zt=23&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=7d6RVBK1da6vLjb9-1TuiA&_nc_ss=7f60f&oh=00_AQHvO07gS77QSx4MuPUhean4yvV5p06Lm2BmgrtXSgN5Ow&oe=6A8E3C32",
+    "iframeSrc": null,
+    "aspectRatio": null
+  },
+  "https://youtu.be/1rsLm42ygu8?si=1s5cnI9tvsgYBIYy": {
+    "url": "https://youtu.be/1rsLm42ygu8?si=1s5cnI9tvsgYBIYy",
+    "title": "Scoop Loops - an ice cream running challenge",
+    "provider": "YouTube",
+    "thumbnailUrl": "https://i.ytimg.com/vi/1rsLm42ygu8/maxresdefault.jpg",
+    "iframeSrc": "https://www.youtube.com/embed/1rsLm42ygu8?rel=0",
+    "aspectRatio": 1.778
+  }
+}

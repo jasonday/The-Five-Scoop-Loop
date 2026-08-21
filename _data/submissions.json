@@ -24,9 +24,18 @@
       }
     ],
     "photos": [
-      { "src": "/assets/images/placeholder-scoop.svg", "alt": "Casey R. with a cone at Red's Dairy Freeze." },
-      { "src": "/assets/images/placeholder-cone.svg", "alt": "Casey R. outside Twin Swirls." },
-      { "src": "/assets/images/placeholder-sundae.svg", "alt": "Casey R. finishing at Beal's on Veranda Street." }
+      {
+        "src": "/assets/images/placeholder-scoop.svg",
+        "alt": "Casey R. with a cone at Red's Dairy Freeze."
+      },
+      {
+        "src": "/assets/images/placeholder-cone.svg",
+        "alt": "Casey R. outside Twin Swirls."
+      },
+      {
+        "src": "/assets/images/placeholder-sundae.svg",
+        "alt": "Casey R. finishing at Beal's on Veranda Street."
+      }
     ],
     "loopType": "five",
     "distanceMiles": 8.4,
@@ -37,21 +46,56 @@
       "features": [
         {
           "type": "Feature",
-          "properties": { "name": "Five Scoop Loop" },
+          "properties": {
+            "name": "Five Scoop Loop"
+          },
           "geometry": {
             "type": "LineString",
             "coordinates": [
-              [-70.2462231, 43.6347911],
-              [-70.2600000, 43.6300000],
-              [-70.2720190, 43.6239440],
-              [-70.2500000, 43.6320000],
-              [-70.2307490, 43.6388970],
-              [-70.2420000, 43.6480000],
-              [-70.2542364, 43.6574584],
-              [-70.2560000, 43.6700000],
-              [-70.2571544, 43.6809578],
-              [-70.2500000, 43.6550000],
-              [-70.2462231, 43.6347911]
+              [
+                -70.2462231,
+                43.6347911
+              ],
+              [
+                -70.26,
+                43.63
+              ],
+              [
+                -70.272019,
+                43.623944
+              ],
+              [
+                -70.25,
+                43.632
+              ],
+              [
+                -70.230749,
+                43.638897
+              ],
+              [
+                -70.242,
+                43.648
+              ],
+              [
+                -70.2542364,
+                43.6574584
+              ],
+              [
+                -70.256,
+                43.67
+              ],
+              [
+                -70.2571544,
+                43.6809578
+              ],
+              [
+                -70.25,
+                43.655
+              ],
+              [
+                -70.2462231,
+                43.6347911
+              ]
             ]
           }
         }
@@ -75,8 +119,14 @@
       }
     ],
     "photos": [
-      { "src": "/assets/images/placeholder-scoop.svg", "alt": "Devin M. at the start outside Red's Dairy Freeze." },
-      { "src": "/assets/images/placeholder-cone.svg", "alt": "Devin M. at Twin Swirls." }
+      {
+        "src": "/assets/images/placeholder-scoop.svg",
+        "alt": "Devin M. at the start outside Red's Dairy Freeze."
+      },
+      {
+        "src": "/assets/images/placeholder-cone.svg",
+        "alt": "Devin M. at Twin Swirls."
+      }
     ],
     "loopType": "three",
     "distanceMiles": 5.2,
@@ -87,19 +137,48 @@
       "features": [
         {
           "type": "Feature",
-          "properties": { "name": "Three Scoop Loop" },
+          "properties": {
+            "name": "Three Scoop Loop"
+          },
           "geometry": {
             "type": "LineString",
             "coordinates": [
-              [-70.2462231, 43.6347911],
-              [-70.2650000, 43.6280000],
-              [-70.2720190, 43.6239440],
-              [-70.2600000, 43.6400000],
-              [-70.2542364, 43.6574584],
-              [-70.2560000, 43.6700000],
-              [-70.2571544, 43.6809578],
-              [-70.2480000, 43.6500000],
-              [-70.2462231, 43.6347911]
+              [
+                -70.2462231,
+                43.6347911
+              ],
+              [
+                -70.265,
+                43.628
+              ],
+              [
+                -70.272019,
+                43.623944
+              ],
+              [
+                -70.26,
+                43.64
+              ],
+              [
+                -70.2542364,
+                43.6574584
+              ],
+              [
+                -70.256,
+                43.67
+              ],
+              [
+                -70.2571544,
+                43.6809578
+              ],
+              [
+                -70.248,
+                43.65
+              ],
+              [
+                -70.2462231,
+                43.6347911
+              ]
             ]
           }
         }
@@ -113,7 +192,10 @@
     "date": "2026-08-02",
     "activityUrl": "https://connect.garmin.com/modern/activity/0000000003",
     "photos": [
-      { "src": "/assets/images/placeholder-sundae.svg", "alt": "Priya S. at the Old Orchard Beach pier with a sundae." }
+      {
+        "src": "/assets/images/placeholder-sundae.svg",
+        "alt": "Priya S. at the Old Orchard Beach pier with a sundae."
+      }
     ],
     "loopType": "five",
     "distanceMiles": 7.6,
@@ -124,21 +206,56 @@
       "features": [
         {
           "type": "Feature",
-          "properties": { "name": "Coastal Scoop Loop" },
+          "properties": {
+            "name": "Coastal Scoop Loop"
+          },
           "geometry": {
             "type": "LineString",
             "coordinates": [
-              [-70.4461633, 43.4971636],
-              [-70.4400000, 43.5040000],
-              [-70.4342091, 43.5095774],
-              [-70.4200000, 43.4950000],
-              [-70.4064740, 43.4822972],
-              [-70.4000000, 43.4950000],
-              [-70.3939692, 43.5120875],
-              [-70.3890000, 43.5060000],
-              [-70.3852727, 43.5005432],
-              [-70.4100000, 43.4930000],
-              [-70.4461633, 43.4971636]
+              [
+                -70.4461633,
+                43.4971636
+              ],
+              [
+                -70.44,
+                43.504
+              ],
+              [
+                -70.4342091,
+                43.5095774
+              ],
+              [
+                -70.42,
+                43.495
+              ],
+              [
+                -70.406474,
+                43.4822972
+              ],
+              [
+                -70.4,
+                43.495
+              ],
+              [
+                -70.3939692,
+                43.5120875
+              ],
+              [
+                -70.389,
+                43.506
+              ],
+              [
+                -70.3852727,
+                43.5005432
+              ],
+              [
+                -70.41,
+                43.493
+              ],
+              [
+                -70.4461633,
+                43.4971636
+              ]
             ]
           }
         }
@@ -152,7 +269,10 @@
     "date": "2026-08-09",
     "activityUrl": "https://www.strava.com/activities/0000000004",
     "photos": [
-      { "src": "/assets/images/placeholder-cone.svg", "alt": "Marcus T. mid-loop on Saco Main Street." }
+      {
+        "src": "/assets/images/placeholder-cone.svg",
+        "alt": "Marcus T. mid-loop on Saco Main Street."
+      }
     ],
     "loopType": "three",
     "distanceMiles": 4.8,
@@ -163,20 +283,72 @@
       "features": [
         {
           "type": "Feature",
-          "properties": { "name": "Three Scoop Loop" },
+          "properties": {
+            "name": "Three Scoop Loop"
+          },
           "geometry": {
             "type": "LineString",
             "coordinates": [
-              [-70.4461633, 43.4971636],
-              [-70.4342091, 43.5095774],
-              [-70.4064740, 43.4822972],
-              [-70.3939692, 43.5120875],
-              [-70.3852727, 43.5005432],
-              [-70.4461633, 43.4971636]
+              [
+                -70.4461633,
+                43.4971636
+              ],
+              [
+                -70.4342091,
+                43.5095774
+              ],
+              [
+                -70.406474,
+                43.4822972
+              ],
+              [
+                -70.3939692,
+                43.5120875
+              ],
+              [
+                -70.3852727,
+                43.5005432
+              ],
+              [
+                -70.4461633,
+                43.4971636
+              ]
             ]
           }
         }
       ]
+    }
+  },
+  {
+    "id": "dd2a9ee4-71e4-4ffb-95ef-6723c3b4be8c",
+    "runnerName": "Jason Day",
+    "region": "saco-oob",
+    "loopType": "five",
+    "date": "2026-08-19",
+    "activityUrl": "https://www.strava.com/activities/19816159935",
+    "photos": [],
+    "evidence": [
+      {
+        "url": "https://www.instagram.com/p/DcRmxHHivCb/",
+        "title": "Piping Plovers on Instagram: \"The first Scoop Loops challenge is complete - the Five Scoop Loop in Saco/Old Orchard Beach, Maine. Visit five ice cream shops, eat a scoop at each, and run the in-betweens.   Thanks to: Scoop 1 - @dairyqueen  Scoop 2 - @fielderschoiceicecream  Scoop 3 - @theopsodafountain  Scoop 4 - @garsides.icecream  Scoop 5 - @thesacoscoop   @pipingplovers  https://jasonday.github.io/scoop-loops/  #mainerunning #runclub #runmaine #scooploops #fivescooploop #icecream\"",
+        "provider": "Instagram",
+        "thumbnailUrl": "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/778699043_18017691485873757_3904720895104520900_n.jpg?stp=cmp1_dst-jpg_e35_s640x640_tt6&_nc_cat=103&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%3D%3D&_nc_ohc=pAewQpkirgkQ7kNvwFSz6gu&_nc_oc=AdpCrMwTziIjl15lLqXmQ71QoW6BmJE5r-djcjM4SjqCyfgfLUJpWOfMr84e9aN2ChY&_nc_zt=23&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=7d6RVBK1da6vLjb9-1TuiA&_nc_ss=7f60f&oh=00_AQHvO07gS77QSx4MuPUhean4yvV5p06Lm2BmgrtXSgN5Ow&oe=6A8E3C32",
+        "iframeSrc": null,
+        "aspectRatio": null
+      },
+      {
+        "url": "https://youtu.be/1rsLm42ygu8?si=1s5cnI9tvsgYBIYy",
+        "title": "Scoop Loops - an ice cream running challenge",
+        "provider": "YouTube",
+        "thumbnailUrl": "https://i.ytimg.com/vi/1rsLm42ygu8/maxresdefault.jpg",
+        "iframeSrc": "https://www.youtube.com/embed/1rsLm42ygu8?rel=0",
+        "aspectRatio": 1.778
+      }
+    ],
+    "notes": "The thing that are the most fun are often the most dumb. This was dumb...and terribly fun.",
+    "routeGeoJSON": {
+      "type": "FeatureCollection",
+      "features": []
     }
   }
 ]
