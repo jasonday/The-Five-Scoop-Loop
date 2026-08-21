@@ -342,11 +342,38 @@ async function run() {
     process.exit(1);
   }
   if (!fs.existsSync(IMAGE_DIR)) fs.mkdirSync(IMAGE_DIR, { recursive: true });
+  // Ensure this exists on disk even on a run with zero approved rows, so the
+  // workflow's `git add` on this literal path never fails with "did not
+  // match any files".
+  if (!fs.existsSync(EMBEDS_FILE)) fs.writeFileSync(EMBEDS_FILE, '{}');
 
   await loadDeps();
 
-  const rows = await (await fetch(APPS_SCRIPT_URL)).json();
-  if (!rows || rows.length === 0) {
+  const res = await fetch(APPS_SCRIPT_URL);
+  const bodyText = await res.text();
+  let rows;
+  try {
+    rows = JSON.parse(bodyText);
+  } catch (err) {
+    // The endpoint returned HTML (usually a Google sign-in or error page),
+    // which means the request did not reach the JSON endpoint anonymously.
+    console.error(
+      'Apps Script did not return JSON (status ' + res.status + ', ' +
+      (res.headers.get('content-type') || 'unknown type') + ').\n' +
+      'This almost always means the Web app is not deployed with access "Anyone",\n' +
+      'the APPS_SCRIPT_URL secret is not the /exec deployment URL, or the latest\n' +
+      'Code.gs was not re-deployed as a new version. Test the URL in a private\n' +
+      'browser window: it should return JSON, not a login page.\n' +
+      'First 200 chars of the response:\n' + bodyText.slice(0, 200)
+    );
+    process.exit(1);
+  }
+
+  if (!Array.isArray(rows)) {
+    console.error('Expected a JSON array from Apps Script, got: ' + typeof rows);
+    process.exit(1);
+  }
+  if (rows.length === 0) {
     console.log('No new approved submissions found.');
     return;
   }

@@ -51,7 +51,7 @@ Whether you’re chasing the leaderboard or just out for a joyful sugar‑powere
 * A GPX file
 * Optional: a selfie at the final shop
 * Group runs: each runner submits their own activity and photos  
-* Submit here: https://forms.gle/iGAL5YutMu5bbtK39
+* [Submit your results](https://forms.gle/iGAL5YutMu5bbtK39)
 
 ---
 
