@@ -4,17 +4,40 @@
 pipeline. The flow:
 
 1. A runner submits the form. A new row lands in the sheet with the photo and
-   GPX stored in Drive.
+   GPX stored in Drive, privately owned by the form (not shared publicly).
 2. You review the row and type `yes` in the **Approved** column.
 3. The scheduled GitHub Action runs `process.js`, which calls this web app
-   (`GET`) to fetch approved, not-yet-processed rows. On the way out, the script
-   writes a random **ID** into any approved row that lacks one. `process.js`
-   downsizes photos to 1600px WebP, simplifies the GPX to GeoJSON, writes
+   (`GET`) to fetch approved, not-yet-processed rows. On the way out, the
+   script writes a random **ID** into any approved row that lacks one, and
+   **reads each row's photo/GPX files itself** (as their owner) and embeds the
+   raw bytes, base64-encoded, in the JSON response — see "Why files are
+   embedded, not fetched" below. `process.js` decodes them, downsizes photos
+   to 1600px WebP, simplifies the GPX to GeoJSON, writes
    `_data/submissions.json`, and commits everything to the repo.
 4. Only after that commit succeeds, the Action runs `finalize.js`, which calls
-   this web app (`POST`) to stamp the **Processed** column and move the original
-   Drive photo/GPX to the trash (they now live in GitHub). Rows are matched by
-   **ID**, so deleting or reordering rows never marks the wrong one.
+   this web app (`POST`) to stamp the **Processed** column and move the
+   original Drive photo/GPX to the trash (they now live in GitHub). Only files
+   that were actually embedded in the committed entry are trashed — a photo or
+   GPX that failed to process is left alone in Drive so nothing is ever lost.
+   Rows are matched by **ID**, so deleting or reordering rows never marks the
+   wrong one.
+
+### Why files are embedded, not fetched
+
+Files a Google Form uploads are private to the form's owner, not shared
+"Anyone with the link." A plain HTTP fetch from GitHub Actions (which has no
+Google login) gets a permission-denied page back instead of the file — this
+used to fail silently: photos came back empty, and the GPX parser accepted the
+error page as "valid but empty" XML, producing a track with no points and no
+error. To avoid depending on any Drive sharing setting (and without making
+runners' files public), this script reads the bytes itself via `DriveApp`,
+since it already runs as the file owner, and hands them to `process.js`
+directly in the response. A soft cap (`MAX_PAYLOAD_BYTES`, default 30 MB)
+keeps any one response from growing unbounded; if a backlog of approved rows
+is larger than that, the extras are simply picked up on the next scheduled
+run — nothing is skipped or lost, it just spreads across a few runs. The
+first row is always included even if it alone exceeds the cap, so one large
+submission can never stall the queue.
 
 ## Sheet setup
 
@@ -90,6 +113,22 @@ Test the deployed `/exec` URL in a **private/incognito** browser window
   script editor and run `doGet` once manually to grant the Sheets/Drive
   permission prompts, then redeploy.
 - Returns JSON (even just `[]`) → the endpoint is working correctly.
+
+**Photos are empty and/or the GPX route is missing, but the run shows up on
+the site with no error:** this was the old behavior when files were fetched
+directly by URL and the fetch silently got a permission-denied page instead of
+the file. It should no longer happen now that files are embedded as described
+above. If it still does, check the Action's log for `No photoAttachments
+field on the response for <name>` or `No gpxAttachment field` — that means
+`Code.gs` was not redeployed after the update (edits to the code do not affect
+the live `/exec` endpoint until you deploy a new version).
+
+**A photo or the GPX never shows up, and the original Drive file is still
+there after a run:** that means it failed to process (check the Action log for
+`Failed to process photo ...` or `GPX for ... parsed but had no track
+points`) and was deliberately left untrashed. Fix the underlying file (corrupt
+upload, wrong file type, GPX exported without timestamps) and clear that row's
+`Processed` cell to have it retried on the next run.
 
 ## Notes
 

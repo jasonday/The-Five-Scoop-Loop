@@ -47,7 +47,44 @@ async function run() {
     process.exit(1);
   }
 
-  console.log(`Finalized ${rows.length} row(s). Apps Script response: ${text}`);
+  const expectedFileCount = rows.reduce((sum, r) => sum + ((r.fileIds && r.fileIds.length) || 0), 0);
+  let result = null;
+  try {
+    result = JSON.parse(text);
+  } catch (err) {
+    console.warn('Apps Script response was not JSON:', text);
+  }
+
+  console.log('');
+  console.log('=== Finalize summary ===');
+  console.log(`Rows sent: ${rows.length}`);
+  if (result) {
+    console.log(`Sheet rows marked Processed: ${result.marked}`);
+    console.log(`Drive files trashed: ${result.trashed} (expected up to ${expectedFileCount})`);
+    if (result.trashed < expectedFileCount) {
+      console.warn(
+        `${expectedFileCount - result.trashed} file(s) were not trashed -- ` +
+        `they may already have been removed, or the id no longer matched a file.`
+      );
+    }
+  } else {
+    console.log(`Apps Script response: ${text}`);
+  }
+  console.log('');
+
+  const stepSummaryPath = process.env.GITHUB_STEP_SUMMARY;
+  if (stepSummaryPath) {
+    try {
+      const md = ['', `- **Rows finalized:** ${rows.length}`];
+      if (result) {
+        md.push(`- **Sheet rows marked Processed:** ${result.marked}`);
+        md.push(`- **Drive files trashed:** ${result.trashed} / ${expectedFileCount} expected`);
+      }
+      fs.appendFileSync(stepSummaryPath, md.join('\n') + '\n');
+    } catch (err) {
+      console.warn('Could not write GITHUB_STEP_SUMMARY:', err.message);
+    }
+  }
 
   // Clean up so a re-run does not re-post stale rows.
   fs.unlinkSync(MANIFEST_FILE);
