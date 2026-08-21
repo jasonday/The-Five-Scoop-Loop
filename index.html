@@ -240,14 +240,14 @@ title: null
                   <ul class="photo-stack">
                     <template x-for="(photo, i) in photoList(selected)" :key="i">
                       <li>
-                        <a class="photo-stack__link" :href="withBase(photo.src)" target="_blank" rel="noopener noreferrer">
+                        <!-- <a class="photo-stack__link" :href="withBase(photo.src)" target="_blank" rel="noopener noreferrer"> -->
                           <img
                             class="photo-stack__img"
                             :src="withBase(photo.src)"
                             :alt="photo.alt || (selected.runnerName + ' photo ' + (i + 1))"
                             loading="lazy"
                             @error="$el.closest('li').remove()">
-                        </a>
+                        <!-- </a> -->
                       </li>
                     </template>
                   </ul>

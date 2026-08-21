@@ -488,7 +488,14 @@ table.board tbody tr:hover { background: var(--pink-soft); }
 
 /* Photos, stacked full width below the details. */
 .modal__more { margin-top: 1.2rem; }
-.photo-stack { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
+.photo-stack {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid; 
+  gap: 0.7rem; 
+  grid-template-columns: repeat(3, 1fr);
+}
 .photo-stack li { margin: 0; }
 .photo-stack__link {
   display: block;
