@@ -1,7 +1,7 @@
 [
   {
     "id": "sample_portland_01",
-    "runnerName": "Casey R.",
+    "runnerName": "This could be you!",
     "region": "portland",
     "date": "2026-07-19",
     "activityUrl": "https://www.strava.com/activities/0000000001",
@@ -104,7 +104,7 @@
   },
   {
     "id": "sample_portland_02",
-    "runnerName": "Devin M.",
+    "runnerName": "This could be you!",
     "region": "portland",
     "date": "2026-07-25",
     "activityUrl": "https://www.strava.com/activities/0000000002",
@@ -178,83 +178,6 @@
               [
                 -70.2462231,
                 43.6347911
-              ]
-            ]
-          }
-        }
-      ]
-    }
-  },
-  {
-    "id": "sample_saco_01",
-    "runnerName": "Priya S.",
-    "region": "saco-oob",
-    "date": "2026-08-02",
-    "activityUrl": "https://connect.garmin.com/modern/activity/0000000003",
-    "photos": [
-      {
-        "src": "/assets/images/placeholder-sundae.svg",
-        "alt": "Priya S. at the Old Orchard Beach pier with a sundae."
-      }
-    ],
-    "loopType": "five",
-    "distanceMiles": 7.6,
-    "durationMinutes": 88,
-    "notes": "Ocean breeze the whole back half. Ocean Park was the sweet finish.",
-    "routeGeoJSON": {
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "properties": {
-            "name": "Coastal Scoop Loop"
-          },
-          "geometry": {
-            "type": "LineString",
-            "coordinates": [
-              [
-                -70.4461633,
-                43.4971636
-              ],
-              [
-                -70.44,
-                43.504
-              ],
-              [
-                -70.4342091,
-                43.5095774
-              ],
-              [
-                -70.42,
-                43.495
-              ],
-              [
-                -70.406474,
-                43.4822972
-              ],
-              [
-                -70.4,
-                43.495
-              ],
-              [
-                -70.3939692,
-                43.5120875
-              ],
-              [
-                -70.389,
-                43.506
-              ],
-              [
-                -70.3852727,
-                43.5005432
-              ],
-              [
-                -70.41,
-                43.493
-              ],
-              [
-                -70.4461633,
-                43.4971636
               ]
             ]
           }
@@ -370,7 +293,7 @@
     "durationMinutes": 129,
     "startTime": "2026-08-19T21:17:01.046Z",
     "endTime": "2026-08-19T23:25:53.106Z",
-    "notes": "The thing that are the most fun are often the most dumb. This was dumb...and terribly fun.",
+    "notes": "The things that are the most fun are often the most dumb. This was dumb...and terribly fun.",
     "routeGeoJSON": {
       "type": "FeatureCollection",
       "features": [
