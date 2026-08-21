@@ -117,7 +117,7 @@ async function processPhotoAttachment(attachment, baseName) {
   const filename = `${baseName}.webp`;
   await sharp(buffer)
     .rotate() // honor EXIF orientation before stripping metadata
-    .resize(1600, 1600, { fit: 'inside', withoutEnlargement: true })
+    .resize(600, 600, { fit: 'inside', withoutEnlargement: true })
     .webp({ quality: 72, effort: 6 })
     .toFile(path.join(IMAGE_DIR, filename));
 
@@ -170,7 +170,9 @@ function collectTimes(geojson) {
   return times;
 }
 
-// Distance (miles) and elapsed time (minutes) derived from the raw track.
+// Distance (miles), elapsed time (minutes), and start/end clock time derived
+// from the raw track. Only the first/last timestamp are kept -- the full
+// per-point array (hundreds of entries) is discarded once these are computed.
 function statsFromGeojson(geojson) {
   let miles = 0;
   for (const line of collectLines(geojson)) {
@@ -181,15 +183,37 @@ function statsFromGeojson(geojson) {
 
   const times = collectTimes(geojson);
   let durationMinutes;
+  let startTime;
+  let endTime;
   if (times.length >= 2) {
-    const span = Math.max(...times) - Math.min(...times);
-    durationMinutes = Math.round(span / 60000);
+    const minT = Math.min(...times);
+    const maxT = Math.max(...times);
+    durationMinutes = Math.round((maxT - minT) / 60000);
+    startTime = new Date(minT).toISOString();
+    endTime = new Date(maxT).toISOString();
   }
 
   return {
     distanceMiles: miles > 0 ? Math.round(miles * 100) / 100 : undefined,
-    durationMinutes
+    durationMinutes,
+    startTime,
+    endTime
   };
+}
+
+// The full per-point timestamp array that togeojson attaches to the track
+// (hundreds+ entries) is only needed to compute the stats above. Coordinate
+// simplification does not touch it, so left alone it would bloat the stored
+// GeoJSON for no benefit -- nothing renders it; the map only draws the line
+// geometry. Drop it before the result is persisted.
+function stripTimeProperties(geojson) {
+  const feats = geojson.type === 'FeatureCollection' ? geojson.features : [geojson];
+  for (const f of feats) {
+    if (!f || !f.properties) continue;
+    if (f.properties.coordinateProperties) delete f.properties.coordinateProperties.times;
+    delete f.properties.coordTimes;
+  }
+  return geojson;
 }
 
 // `attachment` is { id, name, mimeType, data } with data as base64 (see
@@ -204,12 +228,15 @@ async function processGpxAttachment(attachment) {
   const stats = statsFromGeojson(geojson);
 
   // Lower tolerance = more detail; higher = smaller file.
-  const simplified = simplify(geojson, { tolerance: 0.00005, highQuality: true });
+  const simplified = simplify(geojson, { tolerance: 0.000235, highQuality: false });
+  stripTimeProperties(simplified);
 
   return {
     geojson: simplified,
     distanceMiles: stats.distanceMiles,
-    durationMinutes: stats.durationMinutes
+    durationMinutes: stats.durationMinutes,
+    startTime: stats.startTime,
+    endTime: stats.endTime
   };
 }
 
@@ -484,6 +511,8 @@ async function run() {
     let routeGeoJSON = null;
     let gpxDistance;
     let gpxDuration;
+    let gpxStartTime = null;
+    let gpxEndTime = null;
     let savedGpxId = null;
     let gpxStatus = 'missing'; // 'saved' | 'empty' | 'failed' | 'missing'
     if (row.gpxAttachment) {
@@ -493,6 +522,8 @@ async function run() {
           routeGeoJSON = result.geojson;
           gpxDistance = result.distanceMiles;
           gpxDuration = result.durationMinutes;
+          gpxStartTime = result.startTime || null;
+          gpxEndTime = result.endTime || null;
           savedGpxId = row.gpxAttachment.id;
           gpxStatus = 'saved';
         } else {
@@ -545,6 +576,8 @@ async function run() {
       evidence,
       distanceMiles,
       durationMinutes,
+      startTime: gpxStartTime,
+      endTime: gpxEndTime,
       notes: pick(row, ['Add a short note about your run', 'Notes', 'Comments']) || '',
       routeGeoJSON
     };

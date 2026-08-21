@@ -76,8 +76,9 @@ to fix or remove one.
 | `evidence` | array | Zero or more alternate evidence links resolved via Iframely, each `{ url, title, provider, thumbnailUrl, iframeSrc, aspectRatio }`. Each renders as an embed, or a link card when there is no native iframe. |
 | `distanceMiles` | number or null | Measured from the GPX track. Falls back to a form field if the GPX has none. |
 | `durationMinutes` | number or null | Elapsed time from the GPX (first to last point). **Leaderboard rank key** (fastest first). Missing times sort last. |
+| `startTime` / `endTime` | ISO 8601 string or null | The GPX track's first and last point timestamps. Kept for reference/display; everything else needed from them (the duration) is already in `durationMinutes`. |
 | `notes` | string | Free text shown in the detail modal. |
-| `routeGeoJSON` | GeoJSON or null | A `FeatureCollection` with a `LineString` for the route overlay. |
+| `routeGeoJSON` | GeoJSON or null | A `FeatureCollection` with a `LineString` for the route overlay. Per-point timestamps are stripped before this is stored — they aren't rendered by the map and a full track can be hundreds of entries; only `startTime`/`endTime` above are kept. |
 
 Each region shows two leaderboards, one per `loopType` (`five` and `three`),
 each ranked by `durationMinutes` ascending. There is no fun-run board; runs that
