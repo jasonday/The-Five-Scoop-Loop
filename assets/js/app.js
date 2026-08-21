@@ -209,6 +209,17 @@ function scoopApp() {
       return [];
     },
 
+    // Iframely's extracted caption text (Instagram, etc.) collapses the
+    // original line breaks into runs of spaces: a run of 3+ reads as a
+    // paragraph break, exactly 2 as a single line break. Restore both so the
+    // caption renders as it was written instead of one run-on line. Paired
+    // with `white-space: pre-line` on .evidence-card__title, which turns
+    // these \n's into visible breaks without disabling word wrap.
+    formatEvidenceTitle: function (title) {
+      if (!title) return "";
+      return String(title).replace(/ {3,}/g, "\n\n").replace(/ {2}/g, "\n");
+    },
+
     // The activity can be Strava, Garmin, Nike Run Club, and so on.
     activityProvider: function (url) {
       if (!url) return "";

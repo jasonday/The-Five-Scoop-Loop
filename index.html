@@ -222,7 +222,7 @@ title: null
                               <img class="evidence-card__thumb" :src="withBase(ev.thumbnailUrl)" alt="" loading="lazy" @error="$el.remove()">
                             </template>
                             <span class="evidence-card__meta">
-                              <span class="evidence-card__title" x-text="ev.title || ev.url"></span>
+                              <span class="evidence-card__title" x-text="formatEvidenceTitle(ev.title) || ev.url"></span>
                               <span class="evidence-card__provider" x-text="ev.provider || 'Open link'"></span>
                             </span>
                           </a>
