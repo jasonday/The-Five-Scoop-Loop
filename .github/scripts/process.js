@@ -91,33 +91,6 @@ function toNumber(value) {
   return isNaN(n) ? undefined : n;
 }
 
-function driveIdFrom(value) {
-  const match = String(value).match(/[-\w]{25,}/);
-  return match ? match[0] : null;
-}
-
-// All Drive file ids in a cell (a Forms multi-upload puts several links in one
-// cell). Only treat a cell as file links if it actually contains a URL, so we
-// never pull "ids" out of prose fields like alt text.
-function driveIdsFrom(value) {
-  const s = String(value || '');
-  if (!/https?:\/\/|drive\.google/i.test(s)) return [];
-  return s.match(/[-\w]{25,}/g) || [];
-}
-
-// Gather up to 10 photo file ids across any photo-ish columns, de-duplicated.
-function collectPhotoIds(row) {
-  const ids = [];
-  for (const key of Object.keys(row)) {
-    if (!/photo|image|proof|selfie|picture/i.test(key)) continue;
-    if (/alt|description|caption/i.test(key)) continue; // skip text fields
-    for (const fileId of driveIdsFrom(row[key])) {
-      if (!ids.includes(fileId)) ids.push(fileId);
-    }
-  }
-  return ids.slice(0, 10);
-}
-
 // The sheet's ID column value, if present (the Apps Script fills it in).
 function sheetId(row) {
   return String(pick(row, ['ID', 'Id', 'Submission ID']) || '').trim();
@@ -136,11 +109,11 @@ function stableId(row) {
   return 'sub_' + crypto.createHash('sha1').update(String(key)).digest('hex').slice(0, 12);
 }
 
-async function processPhotoId(driveId, baseName) {
-  const directUrl = `https://drive.google.com/uc?export=download&id=${driveId}`;
-  const res = await fetch(directUrl);
-  const buffer = await res.buffer();
-
+// `attachment` is { id, name, mimeType, data } with data as base64, embedded
+// directly in the Apps Script response (see Code.gs) -- no network fetch to
+// Drive, so this works regardless of the file's sharing settings.
+async function processPhotoAttachment(attachment, baseName) {
+  const buffer = Buffer.from(attachment.data, 'base64');
   const filename = `${baseName}.webp`;
   await sharp(buffer)
     .rotate() // honor EXIF orientation before stripping metadata
@@ -219,12 +192,10 @@ function statsFromGeojson(geojson) {
   };
 }
 
-async function processGpx(url) {
-  const driveId = driveIdFrom(url);
-  if (!driveId) return { geojson: null, distanceMiles: undefined, durationMinutes: undefined };
-  const directUrl = `https://drive.google.com/uc?export=download&id=${driveId}`;
-  const res = await fetch(directUrl);
-  const gpxText = await res.text();
+// `attachment` is { id, name, mimeType, data } with data as base64 (see
+// processPhotoAttachment above for why -- same reasoning applies to the GPX).
+async function processGpxAttachment(attachment) {
+  const gpxText = Buffer.from(attachment.data, 'base64').toString('utf8');
 
   const xml = new DOMParser().parseFromString(gpxText, 'text/xml');
   const geojson = gpx(xml);
@@ -336,6 +307,77 @@ async function resolveEmbeds(rawValue, cache) {
   return embeds;
 }
 
+// Prints an aggregate summary to the Action log, and -- when running in
+// GitHub Actions -- also appends a rendered markdown table to the job's Step
+// Summary tab, so the outcome is visible without scrolling through per-row
+// log lines.
+function printSummary(summary) {
+  const p = summary.photos;
+  const g = summary.gpx;
+
+  const lines = [];
+  lines.push('');
+  lines.push('=== Run summary ===');
+  lines.push(`Entries processed: ${summary.entries.length}`);
+  lines.push(
+    `Photos: ${p.saved} saved / ${p.total} total` + (p.failed ? ` (${p.failed} FAILED)` : '')
+  );
+  lines.push(
+    `GPX: ${g.saved} saved, ${g.empty} empty, ${g.failed} failed, ${g.missing} missing`
+  );
+  lines.push(`Evidence links resolved: ${summary.evidenceLinks}`);
+  if (summary.entries.length) {
+    lines.push('');
+    lines.push('Per entry:');
+    for (const e of summary.entries) {
+      const dist = e.distanceMiles != null ? `${e.distanceMiles.toFixed(1)}mi` : 'no distance';
+      const dur = e.durationMinutes != null ? `${e.durationMinutes}min` : 'no time';
+      // Flag anything worth a human glance: a GPX that didn't come through
+      // clean, or photos that were attempted but all failed. A row with
+      // zero photos attempted (evidence-only submission) is not flagged.
+      const [savedCount, attemptedCount] = e.photos.split('/').map(Number);
+      const photosAllFailed = attemptedCount > 0 && savedCount === 0;
+      const flag = (e.gpxStatus !== 'saved' || photosAllFailed) ? '  <-- check this one' : '';
+      lines.push(
+        `  - ${e.runnerName} (${e.loopType}, ${e.region}): ` +
+        `photos ${e.photos}, gpx ${e.gpxStatus} (${dist}, ${dur}), ` +
+        `evidence ${e.evidenceLinks}${flag}`
+      );
+    }
+  }
+  lines.push('');
+  console.log(lines.join('\n'));
+
+  const stepSummaryPath = process.env.GITHUB_STEP_SUMMARY;
+  if (!stepSummaryPath) return;
+  try {
+    const md = [];
+    md.push('## Scoop Loops submission run');
+    md.push('');
+    md.push(`- **Entries processed:** ${summary.entries.length}`);
+    md.push(`- **Photos:** ${p.saved} saved / ${p.total} total${p.failed ? ` (**${p.failed} failed**)` : ''}`);
+    md.push(`- **GPX:** ${g.saved} saved, ${g.empty} empty, ${g.failed} failed, ${g.missing} missing`);
+    md.push(`- **Evidence links resolved:** ${summary.evidenceLinks}`);
+    if (summary.entries.length) {
+      md.push('');
+      md.push('| Runner | Loop | Region | Photos | GPX | Distance | Time | Evidence |');
+      md.push('| --- | --- | --- | --- | --- | --- | --- | --- |');
+      for (const e of summary.entries) {
+        const dist = e.distanceMiles != null ? `${e.distanceMiles.toFixed(1)} mi` : '—';
+        const dur = e.durationMinutes != null ? `${e.durationMinutes} min` : '—';
+        md.push(
+          `| ${e.runnerName} | ${e.loopType} | ${e.region} | ${e.photos} | ${e.gpxStatus} | ${dist} | ${dur} | ${e.evidenceLinks} |`
+        );
+      }
+    }
+    md.push('');
+    fs.appendFileSync(stepSummaryPath, md.join('\n') + '\n');
+  } catch (err) {
+    // The step summary is a nice-to-have; never fail the run over it.
+    console.warn('Could not write GITHUB_STEP_SUMMARY:', err.message);
+  }
+}
+
 async function run() {
   if (!APPS_SCRIPT_URL) {
     console.error('Missing APPS_SCRIPT_URL environment variable.');
@@ -389,6 +431,16 @@ async function run() {
   }
 
   const manifestRows = [];
+  // Aggregated across all rows this run, printed as a summary at the end so
+  // the Action log (and the GitHub Step Summary, if available) shows at a
+  // glance what was saved, what failed, and why -- without having to scroll
+  // back through every row's individual log lines.
+  const summary = {
+    photos: { total: 0, saved: 0, failed: 0 },
+    gpx: { saved: 0, empty: 0, failed: 0, missing: 0 },
+    evidenceLinks: 0,
+    entries: []
+  };
 
   for (const row of rows) {
     const id = stableId(row);
@@ -396,34 +448,65 @@ async function run() {
     console.log(`Processing entry for ${runnerName}...`);
 
     // A submission may include several photos (one per shop, plus a selfie).
-    const photoIds = collectPhotoIds(row);
+    // The Apps Script embeds each file's actual bytes (base64) in the
+    // response, since form-uploaded files are private to the form owner and
+    // cannot be fetched anonymously -- see Code.gs for why.
+    const photoAttachments = Array.isArray(row.photoAttachments) ? row.photoAttachments : [];
+    if (!Array.isArray(row.photoAttachments)) {
+      console.warn(
+        `No photoAttachments field on the response for ${runnerName}. ` +
+        `Is the Apps Script deployment up to date? See .github/apps-script/README.md.`
+      );
+    }
+
     const photos = [];
-    for (let n = 0; n < photoIds.length; n++) {
+    // Only file ids that were actually embedded into this entry get queued
+    // for Drive cleanup below -- a failed download/decode must never trash a
+    // file whose content was never saved anywhere.
+    const savedPhotoIds = [];
+    for (let n = 0; n < photoAttachments.length; n++) {
+      const att = photoAttachments[n];
       try {
-        const src = await processPhotoId(photoIds[n], `${id}_${n + 1}`);
+        const src = await processPhotoAttachment(att, `${id}_${n + 1}`);
         photos.push({
           src,
-          alt: `${runnerName} ice cream run photo ${n + 1} of ${photoIds.length}`
+          alt: `${runnerName} ice cream run photo ${n + 1} of ${photoAttachments.length}`
         });
+        savedPhotoIds.push(att.id);
       } catch (err) {
-        console.error(`Failed to process photo ${n + 1}:`, err.message);
+        console.error(`Failed to process photo ${n + 1} (${att.name || att.id}):`, err.message);
       }
     }
+    summary.photos.total += photoAttachments.length;
+    summary.photos.saved += photos.length;
+    summary.photos.failed += photoAttachments.length - photos.length;
 
     let routeGeoJSON = null;
     let gpxDistance;
     let gpxDuration;
-    const gpxField = pick(row, ['GPX file', 'GPX File', 'GPX', 'GPS Track']);
-    if (gpxField) {
+    let savedGpxId = null;
+    let gpxStatus = 'missing'; // 'saved' | 'empty' | 'failed' | 'missing'
+    if (row.gpxAttachment) {
       try {
-        const result = await processGpx(gpxField);
-        routeGeoJSON = result.geojson;
-        gpxDistance = result.distanceMiles;
-        gpxDuration = result.durationMinutes;
+        const result = await processGpxAttachment(row.gpxAttachment);
+        if (result.geojson && result.geojson.features && result.geojson.features.length > 0) {
+          routeGeoJSON = result.geojson;
+          gpxDistance = result.distanceMiles;
+          gpxDuration = result.durationMinutes;
+          savedGpxId = row.gpxAttachment.id;
+          gpxStatus = 'saved';
+        } else {
+          console.warn(`GPX for ${runnerName} parsed but had no track points; check the uploaded file.`);
+          gpxStatus = 'empty';
+        }
       } catch (err) {
         console.error('Failed to process GPX:', err.message);
+        gpxStatus = 'failed';
       }
+    } else {
+      console.warn(`No gpxAttachment field on the response for ${runnerName}.`);
     }
+    summary.gpx[gpxStatus] += 1;
 
     // Prefer values measured from the GPX; fall back to any form-provided ones.
     const distanceMiles = gpxDistance != null
@@ -449,6 +532,7 @@ async function run() {
       pick(row, ['Alternate evidence', 'Alternate Evidence', 'Video/Post Link']),
       embeds
     );
+    summary.evidenceLinks += evidence.length;
 
     const entry = {
       id,
@@ -465,6 +549,17 @@ async function run() {
       routeGeoJSON
     };
 
+    summary.entries.push({
+      runnerName,
+      region: entry.region,
+      loopType,
+      photos: `${photos.length}/${photoAttachments.length}`,
+      gpxStatus,
+      distanceMiles,
+      durationMinutes,
+      evidenceLinks: evidence.length
+    });
+
     // Upsert by stable id: if this row was already processed, replace it in
     // place rather than appending a duplicate.
     const existingIdx = data.findIndex((e) => e.id === id);
@@ -475,9 +570,12 @@ async function run() {
     }
 
     // The Drive files to trash once this entry is safely committed to GitHub.
-    // Carry the sheet ID so finalize matches the row even if rows move; rowIndex
-    // is the fallback for sheets without an ID column.
-    const fileIds = [...photoIds, driveIdFrom(gpxField || '')].filter(Boolean);
+    // Only ids that were successfully embedded above are included -- a file
+    // that failed to download/decode/parse is left alone in Drive rather
+    // than trashed with no copy of its content anywhere. Carry the sheet ID
+    // so finalize matches the row even if rows move; rowIndex is the
+    // fallback for sheets without an ID column.
+    const fileIds = [...savedPhotoIds, savedGpxId].filter(Boolean);
     manifestRows.push({ id: sheetId(row), rowIndex: row.rowIndex, fileIds });
   }
 
@@ -490,6 +588,7 @@ async function run() {
   // original photos or GPX.
   fs.writeFileSync(MANIFEST_FILE, JSON.stringify({ rows: manifestRows }, null, 2));
 
+  printSummary(summary);
   console.log(`Processed ${manifestRows.length} submission(s). Wrote finalize manifest.`);
 }
 
